@@ -35,21 +35,18 @@ from ._base import Overlay
 class Realtime(Overlay):
     """Draw widget"""
 
-    # The halo pen is centred on the glyph outline, so its width competes with the
-    # stems themselves. Qt hint-rounds stems to about 1 px below 10 px type, so the
-    # compare app's 0.16 em halo (fine at its 13 px) fattens 7 px labels by 49 % of
-    # their ink and the letters blur together. Measured on the real Monza labels at
-    # 7.4 px: 0.16 em +49 %, 0.08 em +30 %, 0.05 em +20 %. Below 10 px the halo is
-    # therefore kept to a faint fringe; above it, the proportional halo applies.
-    TURN_HALO_EM_LARGE = 0.16
-    TURN_HALO_EM_SMALL = 0.05
-    TURN_HALO_SMALL_MAX_PX = 10
+    # Halo width as a fraction of the type size. The pen is centred on the glyph
+    # outline, so it competes with the stems themselves; Qt hint-rounds stems to
+    # about 1 px, which is why the compare app's 0.16 em halo (fine for its 13 px
+    # canvas type) fattens these labels into blobs. Measured on the real Monza
+    # labels: at 7.4 px, 0.16 em costs +49 % ink, 0.08 em +30 %, 0.05 em +20 %; at
+    # 11.8 px, 0.16 em costs +86 %, 0.08 em +29 %, 0.06 em +22 %. 0.06 em keeps the
+    # outline a fringe instead of a blur at every size the widget draws.
+    TURN_HALO_EM = 0.06
 
     def turn_halo_width(self, size: float) -> float:
         """Outline pen width for label type of `size` pixels."""
-        if size < self.TURN_HALO_SMALL_MAX_PX:
-            return self.TURN_HALO_EM_SMALL * size
-        return self.TURN_HALO_EM_LARGE * size
+        return self.TURN_HALO_EM * size
 
     def __init__(self, config, widget_name):
         # Assign base setting

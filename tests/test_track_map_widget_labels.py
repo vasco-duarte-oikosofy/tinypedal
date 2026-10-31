@@ -180,10 +180,11 @@ def main():
               halo_ink <= plain_ink * 1.25,
               f"{halo_ink} ink px with the halo vs {plain_ink} without "
               f"(+{100 * (halo_ink - plain_ink) / max(plain_ink, 1):.0f}%)")
-        check("small type gets a faint halo, large type a proportional one",
-              widget.turn_halo_width(7.4) < 0.5 and widget.turn_halo_width(16) > 2.0,
-              f"{widget.turn_halo_width(7.4):.2f} px at 7.4 px, "
-              f"{widget.turn_halo_width(16):.2f} px at 16 px")
+        check("the halo scales with the type",
+              abs(widget.turn_halo_width(11.8) - 0.71) < 0.01
+              and abs(widget.turn_halo_width(20) - 1.2) < 0.01,
+              f"{widget.turn_halo_width(11.8):.2f} px at 11.8 px, "
+              f"{widget.turn_halo_width(20):.2f} px at 20 px")
         check("the type is readable at the default map size",
               5 <= turn_labels.font_size(planned.get("map_size", 0)) <= 18,
               f"{turn_labels.font_size(planned.get('map_size', 0)):.1f} px")

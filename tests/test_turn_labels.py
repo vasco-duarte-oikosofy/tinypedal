@@ -94,7 +94,12 @@ def frame_for(coords, area_size, margin=40, angle=0):
 
 def test_font_size():
     print("\n-- font size --")
-    check("5.75 px at a 250 px map", abs(font_size(250) - 5.75) < 1e-9, f"{font_size(250)}")
+    # The widget draws 1.6x the compare app's type (its map is 100-400 px), so the
+    # app's reviewed 5.75 px at 250 px becomes 9.2 px here.
+    check("60% larger than the compare app: 9.2 px at a 250 px map",
+          abs(font_size(250) - 5.75 * TURN_LABEL_CONFIG["font_scale"]) < 1e-9,
+          f"{font_size(250)}")
+    check("the scale never overrides the 5 px floor", font_size(120) == 5.0)
     check("5 px floor at a 120 px map", abs(font_size(120) - 5.0) < 1e-9, f"{font_size(120)}")
     check("grows with the map", font_size(400) > font_size(200), f"{font_size(400)}")
     check("ceiling only binds on a huge map",

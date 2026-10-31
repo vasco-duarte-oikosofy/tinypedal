@@ -2166,6 +2166,10 @@ a track without such a file simply shows no labels. Odd corners are labelled
 outside the loop and even corners inside, and the text shortens to the bare
 number before a label is ever moved away from its corner.
 
+Label type is 60% larger than the compare app's, and never larger than the
+widget `font_size`. On very crowded circuits a slightly crowded map may drop the
+last few labels; increasing `area_size` gives them room again.
+
     turn_name_color
 Set turn name text color.
 
@@ -2893,6 +2897,10 @@ lap-telemetry project and ship with TinyPedal in `tinypedal/data/turn_labels`;
 a track without such a file simply shows no labels. Odd corners are labelled
 outside the loop and even corners inside, and the text shortens to the bare
 number before a label is ever moved away from its corner.
+
+Label type is 60% larger than the compare app's, and never larger than the
+widget `font_size`. On very crowded circuits a slightly crowded map may drop the
+last few labels; increasing `area_size` gives them room again.
 
     turn_name_color
 Set turn name text color.
@@ -4102,6 +4110,10 @@ lap-telemetry project and ship with TinyPedal in `tinypedal/data/turn_labels`;
 a track without such a file simply shows no labels. Odd corners are labelled
 outside the loop and even corners inside, and the text shortens to the bare
 number before a label is ever moved away from its corner.
+
+Label type is 60% larger than the compare app's, and never larger than the
+widget `font_size`. On very crowded circuits a slightly crowded map may drop the
+last few labels; increasing `area_size` gives them room again.
 
     turn_name_color
 Set turn name text color.

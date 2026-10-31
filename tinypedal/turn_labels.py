@@ -59,9 +59,15 @@ from . import calculation as calc
 
 logger = logging.getLogger(__name__)
 
-# Layout constants.  Keep in sync with product/web/js/turnLabels.js.
+# Layout constants.  The RULE is shared with product/web/js/turnLabels.js; two
+# presentation constants differ on purpose, because the map here is much smaller:
+#   - font_scale 1.6: the widget's map is 100-400 px against the compare app's
+#     500-950 px, so the same ratio gave 7 px type, which is too small to read on
+#     an overlay. The rule (ratio, caps, gaps) is unchanged, everything is 1.6x.
+#   - see widget/track_map.py for the halo width, which is size dependent.
 TURN_LABEL_CONFIG = {
     "font_ratio": 0.023,      # font size = clamp(map_size * ratio, min, max)
+    "font_scale": 1.6,        # widget type is 60% larger than the compare app's
     "font_min": 5.0,          # 5.75 px at a 250 px map
     "font_max": 18.0,         # only stops absurd type on a huge map
     "gap_ratio": 0.75,        # gap from the track, in font sizes
@@ -107,7 +113,9 @@ class TurnAnchor:
 def font_size(map_size: float, config: dict | None = None) -> float:
     """Type size for a map of `map_size` pixels (its shorter side)."""
     cfg = config or TURN_LABEL_CONFIG
-    return max(cfg["font_min"], min(cfg["font_max"], map_size * cfg["font_ratio"]))
+    scale = cfg.get("font_scale", 1.0)
+    size = map_size * cfg["font_ratio"] * scale
+    return max(cfg["font_min"], min(cfg["font_max"], size))
 
 
 def turn_texts(number: int, name: str | None, map_size: float,
