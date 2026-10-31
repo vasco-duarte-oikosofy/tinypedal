@@ -16,16 +16,23 @@ Add `--save <folder>` to keep the rendered images.
 """
 
 import os
+import re
 import sys
+import unicodedata
 
 sys.path.append(".")
 
-os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+# Do NOT force the offscreen platform: on Windows its plugin has an EMPTY font
+# database, so every glyph renders as a hollow "tofu" box and the layout is
+# measured against the wrong metrics. Qt's default platform renders happily into
+# a QImage without ever showing a window. On a headless box set
+# QT_QPA_PLATFORM=offscreen with a fontconfig font set installed;
+# assert_fonts_available() below refuses to run without real glyphs.
 
 from PySide2.QtCore import QPointF, Qt
 from PySide2.QtGui import (
-    QBrush, QColor, QFont, QFontMetricsF, QGuiApplication, QImage, QPainter,
-    QPainterPath, QPen,
+    QBrush, QColor, QFont, QFontDatabase, QFontMetricsF, QGuiApplication, QImage,
+    QPainter, QPainterPath, QPen,
 )
 
 from tinypedal import calculation as calc
@@ -41,6 +48,25 @@ TEXT_COLOR = QColor("#CCCCCC")
 OUTLINE_COLOR = QColor("#88000000")
 
 FAILURES = []
+
+
+def safe_name(track_name):
+    """ASCII file name: git quotes accented paths, which breaks path tooling."""
+    ascii_name = unicodedata.normalize("NFKD", track_name).encode("ascii", "ignore").decode()
+    return re.sub(r"[^a-z0-9]+", "-", ascii_name.lower()).strip("-")
+
+
+def assert_fonts_available():
+    """Refuse to render review images with a font that has no glyphs."""
+    families = QFontDatabase().families()
+    font = QFont("Consolas")
+    font.setPixelSize(7)
+    metrics = QFontMetricsF(font)
+    check("the platform provides fonts", len(families) > 0,
+          f"{len(families)} families on platform {QGuiApplication.platformName()!r}")
+    check("the label font can draw letters", metrics.inFont("A"),
+          "every glyph would render as a tofu box")
+    return bool(families) and metrics.inFont("A")
 
 
 def check(name, condition, detail=""):
@@ -115,7 +141,7 @@ def render_track(app, track_name, save_folder=None, angle=0):
     painter.end()
 
     if save_folder:
-        image.save(os.path.join(save_folder, f"{track_name}.png"))
+        image.save(os.path.join(save_folder, f"track-{safe_name(track_name)}.png"))
     return placed, dropped, image
 
 
@@ -126,6 +152,10 @@ def main(argv):
         os.makedirs(save_folder, exist_ok=True)
 
     app = QGuiApplication.instance() or QGuiApplication([])
+    if not assert_fonts_available():
+        print("\nRESULT: FAIL (no usable fonts - leave QT_QPA_PLATFORM unset so Qt "
+              "can use a platform with a font database)")
+        return 1
 
     tracks = sorted(
         name[:-len(".turns.json")] for name in os.listdir(TURNDATA)

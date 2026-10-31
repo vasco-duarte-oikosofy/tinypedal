@@ -19,8 +19,14 @@ import sys
 
 sys.path.append(".")
 
-os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+# Do NOT force the offscreen platform: on Windows its plugin has an EMPTY font
+# database, so every glyph renders as a hollow "tofu" box and the layout is
+# measured against the wrong metrics. Qt's default platform renders happily into
+# a QImage without ever showing a window. On a headless box set
+# QT_QPA_PLATFORM=offscreen with a fontconfig font set installed;
+# assert_fonts_available() below refuses to run without real glyphs.
 
+from PySide2.QtGui import QFontDatabase, QFontMetricsF
 from PySide2.QtWidgets import QApplication
 
 from tinypedal.const_file import FileExt
@@ -51,9 +57,70 @@ def painted_pixels(pixmap, step=2):
     return total
 
 
+def measure_for(widget):
+    """The same text metrics the widget draws with."""
+    metrics = QFontMetricsF(widget.turn_font)
+    return lambda text, _size: (metrics.boundingRect(text).width(),
+                                metrics.boundingRect(text).height())
+
+
+def ink_inside(pixmap, placed):
+    """Painted pixels inside the label boxes of a rendered pixmap."""
+    if not placed:
+        return 0
+    image = pixmap.toImage()
+    total = 0
+    for label in placed:
+        for y in range(int(label.y), int(label.y + label.height) + 1):
+            for x in range(int(label.x), int(label.x + label.width) + 1):
+                if 0 <= x < image.width() and 0 <= y < image.height():
+                    if image.pixelColor(x, y).alpha() > 60:
+                        total += 1
+    return total
+
+
+def halo_growth(widget, placed):
+    """Ink pixels of the same labels drawn with and without the halo."""
+    if not placed:
+        return 0, 0
+    from PySide2.QtGui import QBrush, QColor, QImage, QPainter, QPainterPath, QPen
+    from PySide2.QtCore import QPointF, Qt
+
+    metrics = QFontMetricsF(widget.turn_font)
+    size = min(turn_labels.font_size(widget.temp_map_size), max(widget.wcfg["font_size"], 5))
+    width = widget.area_size
+    height = widget.area_size
+
+    def ink(with_halo):
+        image = QImage(width, height, QImage.Format_ARGB32)
+        image.fill(Qt.transparent)
+        painter = QPainter(image)
+        painter.setRenderHint(QPainter.Antialiasing, True)
+        painter.setFont(widget.turn_font)
+        brush = QBrush(QColor(widget.wcfg["turn_name_color"]))
+        for label in placed:
+            path = QPainterPath()
+            path.addText(QPointF(label.x, label.y + metrics.ascent()),
+                         widget.turn_font, label.text)
+            if with_halo:
+                pen = QPen(QColor(widget.wcfg["turn_name_outline_color"]))
+                pen.setWidthF(widget.turn_halo_width(size))
+                pen.setJoinStyle(Qt.RoundJoin)
+                painter.setPen(pen)
+                painter.setBrush(QBrush(Qt.NoBrush))
+                painter.drawPath(path)
+            painter.fillPath(path, brush)
+        painter.end()
+        return sum(
+            1 for y in range(height) for x in range(width)
+            if image.pixelColor(x, y).alpha() > 60
+        )
+
+    return ink(True), ink(False)
+
+
 def render(widget, coords):
     """Rebuild the map image the way the widget does on a map update."""
-    widget.turn_coords = coords
     path = widget.create_map_path(coords)
     widget.draw_map_image(path, widget.circular_map)
     return widget.pixmap_map
@@ -69,6 +136,12 @@ def main():
     from tinypedal.widget.track_map import Realtime
 
     widget = Realtime(cfg, "track_map")
+    families = QFontDatabase().families()
+    metrics = QFontMetricsF(widget.turn_font)
+    check("the platform provides fonts", len(families) > 0,
+          f"{len(families)} families on platform {QApplication.platformName()!r}")
+    check("the label font can draw letters", metrics.inFont("A"),
+          "labels would be tofu boxes")
     check("turn names are on by default", widget.show_turn_name is True)
     check("the config exposes the label colours",
           all(key in widget.wcfg for key in
@@ -102,6 +175,15 @@ def main():
               all(label.x >= 0 and label.y >= 0
                   and label.x + label.width <= widget.area_size
                   and label.y + label.height <= widget.area_size for label in placed))
+        halo_ink, plain_ink = halo_growth(widget, planned.get("placed", []))
+        check("the halo does not fatten the glyphs into blobs",
+              halo_ink <= plain_ink * 1.25,
+              f"{halo_ink} ink px with the halo vs {plain_ink} without "
+              f"(+{100 * (halo_ink - plain_ink) / max(plain_ink, 1):.0f}%)")
+        check("small type gets a faint halo, large type a proportional one",
+              widget.turn_halo_width(7.4) < 0.5 and widget.turn_halo_width(16) > 2.0,
+              f"{widget.turn_halo_width(7.4):.2f} px at 7.4 px, "
+              f"{widget.turn_halo_width(16):.2f} px at 16 px")
         check("the type is readable at the default map size",
               5 <= turn_labels.font_size(planned.get("map_size", 0)) <= 18,
               f"{turn_labels.font_size(planned.get('map_size', 0)):.1f} px")
@@ -130,13 +212,27 @@ def main():
         os.makedirs(folder, exist_ok=True)
         widget.turn_data = data
         widget.show_turn_name = True
-        pixmap = render(widget, coords)
         for angle in (0, 90):
             widget.wcfg["display_orientation"] = angle
             path = widget.create_map_path(coords)
             widget.draw_map_image(path, widget.circular_map)
-            widget.pixmap_map.save(os.path.join(folder, f"widget-{TRACK}-{angle}.png"))
-        pixmap.save(os.path.join(folder, f"widget-{TRACK}.png"))
+            # copy(): the widget reuses one pixmap, so a saved reference would be
+            # overwritten by the next render.
+            pixmap = widget.pixmap_map.copy()
+            pixmap.save(os.path.join(folder, f"widget-{angle}-degrees.png"))
+            if angle == 0:
+                placed_now = turn_labels.plan_turn_labels(
+                    turn_labels.anchor_turns(
+                        data[1], coords, widget.map_orient_deg,
+                        widget.map_range, widget.map_scale, widget.map_offset),
+                    widget.temp_map_size, measure_for(widget),
+                    map_width=widget.area_size, map_height=widget.area_size)[0]
+                # A plan that is never painted looks exactly like a track without
+                # corners, so check the pixels of the saved picture itself.
+                ink = ink_inside(pixmap, placed_now)
+                check("the saved review image contains the labels", ink > 0,
+                      f"{ink} painted px inside {len(placed_now)} label boxes")
+        widget.wcfg["display_orientation"] = 0
         print(f"\n  saved images to {folder}")
 
     print(f"\n{'RESULT: PASS' if not FAILURES else 'RESULT: FAIL (' + str(len(FAILURES)) + ')'}")

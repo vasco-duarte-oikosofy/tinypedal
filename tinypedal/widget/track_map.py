@@ -35,6 +35,22 @@ from ._base import Overlay
 class Realtime(Overlay):
     """Draw widget"""
 
+    # The halo pen is centred on the glyph outline, so its width competes with the
+    # stems themselves. Qt hint-rounds stems to about 1 px below 10 px type, so the
+    # compare app's 0.16 em halo (fine at its 13 px) fattens 7 px labels by 49 % of
+    # their ink and the letters blur together. Measured on the real Monza labels at
+    # 7.4 px: 0.16 em +49 %, 0.08 em +30 %, 0.05 em +20 %. Below 10 px the halo is
+    # therefore kept to a faint fringe; above it, the proportional halo applies.
+    TURN_HALO_EM_LARGE = 0.16
+    TURN_HALO_EM_SMALL = 0.05
+    TURN_HALO_SMALL_MAX_PX = 10
+
+    def turn_halo_width(self, size: float) -> float:
+        """Outline pen width for label type of `size` pixels."""
+        if size < self.TURN_HALO_SMALL_MAX_PX:
+            return self.TURN_HALO_EM_SMALL * size
+        return self.TURN_HALO_EM_LARGE * size
+
     def __init__(self, config, widget_name):
         # Assign base setting
         super().__init__(config, widget_name)
@@ -122,7 +138,7 @@ class Realtime(Overlay):
 
         # Turn name labels (see tinypedal/turn_labels.py)
         self.show_turn_name = self.wcfg["show_turn_name"]
-        self.turn_coords = ()
+        self.map_coords = ()   # raw coordinates behind map_range/scale/offset
         self.turn_data = None
         self.turn_font = QFont(self.wcfg["font_name"])
         self.turn_font.setWeight(QFont.Bold)
@@ -158,7 +174,6 @@ class Realtime(Overlay):
         if self.last_modified != data:
             self.last_modified = data
             raw_data = minfo.mapping.coordinates if data != -1 else None
-            self.turn_coords = raw_data or ()
             self.turn_data = (
                 turn_labels.load_turn_labels(
                     api.read.session.track_name(),
@@ -196,6 +211,9 @@ class Realtime(Overlay):
 
     def create_map_path(self, raw_coords=None):
         """Create map path"""
+        # The turn labels anchor into exactly these coordinates; keeping them here
+        # means they can never go stale relative to map_range/scale/offset.
+        self.map_coords = raw_coords or ()
         map_path = QPainterPath()
         if raw_coords:
             dist = calc.distance(raw_coords[0], raw_coords[-1])
@@ -331,7 +349,7 @@ class Realtime(Overlay):
         _lap_length, turns = self.turn_data
         try:
             anchors = turn_labels.anchor_turns(
-                turns, self.turn_coords, self.map_orient_deg,
+                turns, self.map_coords, self.map_orient_deg,
                 self.map_range, self.map_scale, self.map_offset,
             )
         except (IndexError, TypeError, ValueError):
@@ -356,7 +374,7 @@ class Realtime(Overlay):
 
         painter.setFont(self.turn_font)
         pen = QPen(self.wcfg["turn_name_outline_color"])
-        pen.setWidthF(max(size * 0.16, 1.0))
+        pen.setWidthF(self.turn_halo_width(size))
         pen.setJoinStyle(Qt.RoundJoin)
         painter.setPen(pen)
         painter.setBrush(QBrush(Qt.NoBrush))
