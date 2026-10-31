@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "track_name": "Silverstone Grand Prix Circuit - ELMS",
+  "lap_length_m": 5886.805,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": "Copse", "short_name": null, "apex_s_m": 380.0, "s_frac": 0.064551},
+    {"number": 2, "name": "Maggots", "short_name": null, "apex_s_m": 1050.0, "s_frac": 0.178365},
+    {"number": 3, "name": "Becketts Entry", "short_name": null, "apex_s_m": 1194.0, "s_frac": 0.202827},
+    {"number": 4, "name": "Becketts Exit", "short_name": null, "apex_s_m": 1309.0, "s_frac": 0.222362},
+    {"number": 5, "name": "Chapel", "short_name": null, "apex_s_m": 1468.0, "s_frac": 0.249371},
+    {"number": 6, "name": "Stowe", "short_name": null, "apex_s_m": 2342.0, "s_frac": 0.397839},
+    {"number": 7, "name": "Vale 1", "short_name": null, "apex_s_m": 2811.0, "s_frac": 0.477509},
+    {"number": 8, "name": "Vale 2", "short_name": null, "apex_s_m": 2875.0, "s_frac": 0.48838},
+    {"number": 9, "name": "Club", "short_name": null, "apex_s_m": 3055.0, "s_frac": 0.518957},
+    {"number": 10, "name": "Abbey", "short_name": null, "apex_s_m": 3512.0, "s_frac": 0.596589},
+    {"number": 11, "name": "Farm", "short_name": null, "apex_s_m": 3805.0, "s_frac": 0.646361},
+    {"number": 12, "name": "Village", "short_name": null, "apex_s_m": 4081.0, "s_frac": 0.693245},
+    {"number": 13, "name": "The Loop", "short_name": null, "apex_s_m": 4207.0, "s_frac": 0.714649},
+    {"number": 14, "name": "Aintree", "short_name": null, "apex_s_m": 4411.0, "s_frac": 0.749303},
+    {"number": 15, "name": "Brooklands", "short_name": null, "apex_s_m": 5172.0, "s_frac": 0.878575},
+    {"number": 16, "name": "Luffield 1", "short_name": null, "apex_s_m": 5304.0, "s_frac": 0.900998},
+    {"number": 17, "name": "Luffield 2", "short_name": null, "apex_s_m": 5337.0, "s_frac": 0.906604},
+    {"number": 18, "name": "Woodcote", "short_name": null, "apex_s_m": 5705.0, "s_frac": 0.969117}
+  ]
+}

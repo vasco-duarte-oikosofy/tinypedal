@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "track_name": "Circuit de la Sarthe",
+  "lap_length_m": 13548.182,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": "Dunlop Curve", "short_name": null, "apex_s_m": 594.0, "s_frac": 0.043844},
+    {"number": 2, "name": "Dunlop Chicane 1", "short_name": "Dunlop 1", "apex_s_m": 857.0, "s_frac": 0.063256},
+    {"number": 3, "name": "Dunlop Chicane 2", "short_name": "Dunlop 2", "apex_s_m": 907.0, "s_frac": 0.066946},
+    {"number": 4, "name": "Esses de la Foret", "short_name": "Foret", "apex_s_m": 1469.0, "s_frac": 0.108428},
+    {"number": 5, "name": "Tertre Rouge", "short_name": null, "apex_s_m": 1905.0, "s_frac": 0.140609},
+    {"number": 6, "name": "Daytona", "short_name": null, "apex_s_m": 4130.0, "s_frac": 0.304838},
+    {"number": 7, "name": "Michelin", "short_name": null, "apex_s_m": 6104.0, "s_frac": 0.45054},
+    {"number": 8, "name": "Mulsanne Corner", "short_name": "Mulsanne", "apex_s_m": 7729.0, "s_frac": 0.570482},
+    {"number": 9, "name": "Indianapolis Entry", "short_name": "Indianapolis", "apex_s_m": 9824.0, "s_frac": 0.725116},
+    {"number": 10, "name": "Arnage", "short_name": null, "apex_s_m": 10155.0, "s_frac": 0.749547},
+    {"number": 11, "name": "Porsche", "short_name": null, "apex_s_m": 11561.0, "s_frac": 0.853325},
+    {"number": 12, "name": "Virage du Pont Entry", "short_name": "Pont Entry", "apex_s_m": 11714.0, "s_frac": 0.864618},
+    {"number": 13, "name": "Virage du Pont Exit", "short_name": "Pont Exit", "apex_s_m": 12003.0, "s_frac": 0.885949},
+    {"number": 14, "name": "Karting", "short_name": null, "apex_s_m": 12233.0, "s_frac": 0.902926},
+    {"number": 15, "name": "Corvette", "short_name": null, "apex_s_m": 12427.0, "s_frac": 0.917245},
+    {"number": 16, "name": "Ford Chicane 1", "short_name": null, "apex_s_m": 13224.0, "s_frac": 0.976072},
+    {"number": 17, "name": "Ford Chicane 2", "short_name": null, "apex_s_m": 13298.0, "s_frac": 0.981534},
+    {"number": 18, "name": "Raccordement 1", "short_name": null, "apex_s_m": 13372.0, "s_frac": 0.986996},
+    {"number": 19, "name": "Raccordement 2", "short_name": null, "apex_s_m": 13429.0, "s_frac": 0.991203}
+  ]
+}

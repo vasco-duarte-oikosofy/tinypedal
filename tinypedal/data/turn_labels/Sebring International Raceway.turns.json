@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "track_name": "Sebring International Raceway",
+  "lap_length_m": 5792.675,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": null, "short_name": null, "apex_s_m": 499.0, "s_frac": 0.086143},
+    {"number": 2, "name": null, "short_name": null, "apex_s_m": 939.0, "s_frac": 0.162101},
+    {"number": 3, "name": null, "short_name": null, "apex_s_m": 1109.0, "s_frac": 0.191449},
+    {"number": 4, "name": "Hairpin", "short_name": null, "apex_s_m": 1971.0, "s_frac": 0.340257},
+    {"number": 5, "name": null, "short_name": null, "apex_s_m": 2762.0, "s_frac": 0.476809},
+    {"number": 6, "name": "Tower", "short_name": null, "apex_s_m": 3254.0, "s_frac": 0.561744},
+    {"number": 7, "name": null, "short_name": null, "apex_s_m": 4034.0, "s_frac": 0.696397},
+    {"number": 8, "name": "Le Mans", "short_name": null, "apex_s_m": 4234.0, "s_frac": 0.730923},
+    {"number": 9, "name": "Sunset Bend", "short_name": null, "apex_s_m": 5301.0, "s_frac": 0.915121},
+    {"number": 10, "name": "Sunset Bend", "short_name": null, "apex_s_m": 5378.0, "s_frac": 0.928414}
+  ]
+}

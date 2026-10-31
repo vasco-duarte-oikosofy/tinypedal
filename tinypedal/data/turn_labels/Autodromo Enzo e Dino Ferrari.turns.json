@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "track_name": "Autodromo Enzo e Dino Ferrari",
+  "lap_length_m": 4981.336,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": "Tamburello", "short_name": null, "apex_s_m": 704.0, "s_frac": 0.141328},
+    {"number": 2, "name": "Variante Villeneuve 1", "short_name": "Villeneuve 1", "apex_s_m": 1419.0, "s_frac": 0.284863},
+    {"number": 3, "name": "Variante Villeneuve 2", "short_name": "Villeneuve 2", "apex_s_m": 1417.0, "s_frac": 0.284462},
+    {"number": 4, "name": "Tosa", "short_name": null, "apex_s_m": 1696.0, "s_frac": 0.340471},
+    {"number": 5, "name": "Piratella", "short_name": null, "apex_s_m": 2323.0, "s_frac": 0.466341},
+    {"number": 6, "name": "Acque Minerali 1", "short_name": "Acque 1", "apex_s_m": 2841.0, "s_frac": 0.570329},
+    {"number": 7, "name": "Acque Minerali 2", "short_name": "Acque 2", "apex_s_m": 2858.0, "s_frac": 0.573742},
+    {"number": 8, "name": "Variante Alta 1", "short_name": "Alta 1", "apex_s_m": 3385.0, "s_frac": 0.679537},
+    {"number": 9, "name": "Variante Alta 2", "short_name": "Alta 2", "apex_s_m": 3396.0, "s_frac": 0.681745},
+    {"number": 10, "name": "Rivazza 1", "short_name": null, "apex_s_m": 4145.0, "s_frac": 0.832106},
+    {"number": 11, "name": "Rivazza 2", "short_name": null, "apex_s_m": 4256.0, "s_frac": 0.854389}
+  ]
+}

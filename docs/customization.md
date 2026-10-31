@@ -2159,6 +2159,20 @@ Show start line mark.
     show_sector_line
 Show sector line mark.
 
+    show_turn_name
+Show corner numbers and names on the map (`T1 Abbey`). Names come from the
+lap-telemetry project and ship with TinyPedal in `tinypedal/data/turn_labels`;
+a track without such a file simply shows no labels. Odd corners are labelled
+outside the loop and even corners inside, and the text shortens to the bare
+number before a label is ever moved away from its corner.
+
+    turn_name_color
+Set turn name text color.
+
+    turn_name_outline_color
+Set turn name outline color, which keeps the text readable where it crosses the
+map line. Set the alpha value to `00` to disable the outline.
+
     show_position_mark
 Show player's current position line mark.
 
@@ -2872,6 +2886,20 @@ Show start line mark.
 
     show_sector_line
 Show sector line mark.
+
+    show_turn_name
+Show corner numbers and names on the map (`T1 Abbey`). Names come from the
+lap-telemetry project and ship with TinyPedal in `tinypedal/data/turn_labels`;
+a track without such a file simply shows no labels. Odd corners are labelled
+outside the loop and even corners inside, and the text shortens to the bare
+number before a label is ever moved away from its corner.
+
+    turn_name_color
+Set turn name text color.
+
+    turn_name_outline_color
+Set turn name outline color, which keeps the text readable where it crosses the
+map line. Set the alpha value to `00` to disable the outline.
 
     show_vehicle_standings
 Show vehicle standings info on navigation map.
@@ -4067,6 +4095,20 @@ Show start line mark.
 
     show_sector_line
 Show sector line mark.
+
+    show_turn_name
+Show corner numbers and names on the map (`T1 Abbey`). Names come from the
+lap-telemetry project and ship with TinyPedal in `tinypedal/data/turn_labels`;
+a track without such a file simply shows no labels. Odd corners are labelled
+outside the loop and even corners inside, and the text shortens to the bare
+number before a label is ever moved away from its corner.
+
+    turn_name_color
+Set turn name text color.
+
+    turn_name_outline_color
+Set turn name outline color, which keeps the text readable where it crosses the
+map line. Set the alpha value to `00` to disable the outline.
 
     show_proximity_circle
 Show proximity circle around player's position, which helps to quickly spot player and nearby opponents on map.

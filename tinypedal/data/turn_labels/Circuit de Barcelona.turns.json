@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "track_name": "Circuit de Barcelona",
+  "lap_length_m": 4768.325,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": "Turn 1 — Elf", "short_name": null, "apex_s_m": 853.0, "s_frac": 0.178889},
+    {"number": 2, "name": null, "short_name": null, "apex_s_m": 946.0, "s_frac": 0.198393},
+    {"number": 3, "name": "Turn 3 — Renault", "short_name": "Renault", "apex_s_m": 1142.0, "s_frac": 0.239497},
+    {"number": 4, "name": "Turn 4 — Repsol", "short_name": "Repsol", "apex_s_m": 1753.0, "s_frac": 0.367634},
+    {"number": 5, "name": "Turn 5 — Seat", "short_name": null, "apex_s_m": 2144.0, "s_frac": 0.449634},
+    {"number": 6, "name": null, "short_name": null, "apex_s_m": 2370.0, "s_frac": 0.49703},
+    {"number": 7, "name": "Turn 7 — Würth", "short_name": "Würth", "apex_s_m": 2558.0, "s_frac": 0.536457},
+    {"number": 8, "name": null, "short_name": null, "apex_s_m": 2660.0, "s_frac": 0.557848},
+    {"number": 9, "name": "Turn 9 — Campsa", "short_name": "Campsa", "apex_s_m": 2903.0, "s_frac": 0.608809},
+    {"number": 10, "name": "Turn 10 — La Caixa", "short_name": "La Caixa", "apex_s_m": 3526.0, "s_frac": 0.739463},
+    {"number": 11, "name": null, "short_name": null, "apex_s_m": 3610.0, "s_frac": 0.757079},
+    {"number": 12, "name": null, "short_name": null, "apex_s_m": 3771.0, "s_frac": 0.790844},
+    {"number": 13, "name": null, "short_name": null, "apex_s_m": 4057.0, "s_frac": 0.850823},
+    {"number": 14, "name": null, "short_name": null, "apex_s_m": 4323.0, "s_frac": 0.906608}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "track_name": "Paul Ricard - 1A-V2-Short",
+  "lap_length_m": 5125.296,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": "S de la Verrerie 1", "short_name": "Verrerie 1", "apex_s_m": 652.0, "s_frac": 0.127212},
+    {"number": 2, "name": "S de la Verrerie 2", "short_name": "Verrerie 2", "apex_s_m": 733.0, "s_frac": 0.143016},
+    {"number": 3, "name": "Virage de l'Hotel 1", "short_name": "l'Hotel 1", "apex_s_m": 1292.0, "s_frac": 0.252083},
+    {"number": 4, "name": "Virage de l'Hotel 2", "short_name": "l'Hotel 2", "apex_s_m": 1386.0, "s_frac": 0.270423},
+    {"number": 5, "name": "Virage du Camp", "short_name": "Camp", "apex_s_m": 1510.0, "s_frac": 0.294617},
+    {"number": 6, "name": "Virage de la Sainte-Beaume", "short_name": "Ste-Beaume", "apex_s_m": 1636.0, "s_frac": 0.319201},
+    {"number": 7, "name": "Flat to Mistral", "short_name": null, "apex_s_m": 1792.0, "s_frac": 0.349638},
+    {"number": 8, "name": "Signes", "short_name": null, "apex_s_m": 3787.0, "s_frac": 0.738884},
+    {"number": 9, "name": "Hairpin Shortcut", "short_name": null, "apex_s_m": 4044.0, "s_frac": 0.789028},
+    {"number": 10, "name": "Virage de Bendor", "short_name": "Bendor", "apex_s_m": 4199.0, "s_frac": 0.81927},
+    {"number": 11, "name": "Garalaban", "short_name": null, "apex_s_m": 4474.0, "s_frac": 0.872925},
+    {"number": 12, "name": "Virage de la Tour", "short_name": "la Tour", "apex_s_m": 4668.0, "s_frac": 0.910777},
+    {"number": 13, "name": "Virage du Pont", "short_name": "Pont", "apex_s_m": 4837.0, "s_frac": 0.94375}
+  ]
+}

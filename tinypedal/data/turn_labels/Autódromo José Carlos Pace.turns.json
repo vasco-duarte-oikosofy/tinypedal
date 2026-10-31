@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "track_name": "Autódromo José Carlos Pace",
+  "lap_length_m": 4304.618,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": "Senna S 1", "short_name": "Senna 1", "apex_s_m": 384.0, "s_frac": 0.089207},
+    {"number": 2, "name": "Senna S 2", "short_name": "Senna 2", "apex_s_m": 453.0, "s_frac": 0.105236},
+    {"number": 3, "name": "Curva do Sol", "short_name": "Sol", "apex_s_m": 698.0, "s_frac": 0.162151},
+    {"number": 4, "name": "Descida do Lago 1", "short_name": "Lago 1", "apex_s_m": 1432.0, "s_frac": 0.332666},
+    {"number": 5, "name": "Descida do Lago 2", "short_name": "Lago 2", "apex_s_m": 1605.0, "s_frac": 0.372855},
+    {"number": 6, "name": "Ferradura 1", "short_name": null, "apex_s_m": 2089.0, "s_frac": 0.485293},
+    {"number": 7, "name": "Ferradura 2", "short_name": null, "apex_s_m": 2152.0, "s_frac": 0.499928},
+    {"number": 8, "name": "Laranjinha", "short_name": null, "apex_s_m": 2361.0, "s_frac": 0.548481},
+    {"number": 9, "name": "Pinheirinho", "short_name": null, "apex_s_m": 2472.0, "s_frac": 0.574267},
+    {"number": 10, "name": "Bico de Pato", "short_name": "Bico", "apex_s_m": 2772.0, "s_frac": 0.64396},
+    {"number": 11, "name": "Mergulho", "short_name": null, "apex_s_m": 2949.0, "s_frac": 0.685078},
+    {"number": 12, "name": "Junção", "short_name": null, "apex_s_m": 3255.0, "s_frac": 0.756165},
+    {"number": 13, "name": "Café", "short_name": null, "apex_s_m": 3391.0, "s_frac": 0.787759},
+    {"number": 14, "name": "Subida das Boxes", "short_name": "Boxes", "apex_s_m": 3680.0, "s_frac": 0.854896},
+    {"number": 15, "name": "Arquibancadas", "short_name": "Arquib.", "apex_s_m": 4020.0, "s_frac": 0.933881}
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "track_name": "Daytona International Speedway Road Course",
+  "lap_length_m": 5713.365,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": null, "short_name": null, "apex_s_m": 462.0, "s_frac": 0.080863},
+    {"number": 2, "name": "Turn 2 (Kink)", "short_name": null, "apex_s_m": 659.0, "s_frac": 0.115344},
+    {"number": 3, "name": "International Horseshoe", "short_name": "Horseshoe", "apex_s_m": 968.0, "s_frac": 0.169427},
+    {"number": 4, "name": "Turn 4 (Kink)", "short_name": null, "apex_s_m": 1466.0, "s_frac": 0.256591},
+    {"number": 5, "name": "Turn 5 (West Horseshoe)", "short_name": "West Horseshoe", "apex_s_m": 1751.0, "s_frac": 0.306474},
+    {"number": 6, "name": null, "short_name": null, "apex_s_m": 2140.0, "s_frac": 0.37456},
+    {"number": 7, "name": null, "short_name": null, "apex_s_m": 2466.0, "s_frac": 0.43162},
+    {"number": 8, "name": null, "short_name": null, "apex_s_m": 2922.0, "s_frac": 0.511432},
+    {"number": 9, "name": "Turn 9 (Bus Stop 1)", "short_name": "Bus Stop 1", "apex_s_m": 3817.0, "s_frac": 0.668083},
+    {"number": 10, "name": "Turn 10 (Bus Stop 2)", "short_name": "Bus Stop 2", "apex_s_m": 3903.0, "s_frac": 0.683135},
+    {"number": 11, "name": null, "short_name": null, "apex_s_m": 4446.0, "s_frac": 0.778175},
+    {"number": 12, "name": null, "short_name": null, "apex_s_m": 4903.0, "s_frac": 0.858163}
+  ]
+}

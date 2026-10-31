@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "track_name": "WeatherTech Raceway Laguna Seca",
+  "lap_length_m": 3553.917,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": null, "short_name": null, "apex_s_m": 263.0, "s_frac": 0.074003},
+    {"number": 2, "name": "Andretti Hairpin", "short_name": null, "apex_s_m": 511.0, "s_frac": 0.143785},
+    {"number": 3, "name": null, "short_name": null, "apex_s_m": 800.0, "s_frac": 0.225104},
+    {"number": 4, "name": null, "short_name": null, "apex_s_m": 1087.0, "s_frac": 0.30586},
+    {"number": 5, "name": null, "short_name": null, "apex_s_m": 1540.0, "s_frac": 0.433325},
+    {"number": 6, "name": null, "short_name": null, "apex_s_m": 1951.0, "s_frac": 0.548972},
+    {"number": 7, "name": null, "short_name": null, "apex_s_m": 2296.0, "s_frac": 0.646048},
+    {"number": 8, "name": "Corkscrew (Turn 8)", "short_name": "Corkscrew", "apex_s_m": 2477.0, "s_frac": 0.696977},
+    {"number": 9, "name": "Corkscrew 8a", "short_name": null, "apex_s_m": 2493.0, "s_frac": 0.701479},
+    {"number": 10, "name": "Rainey Curve (Turn 9)", "short_name": "Rainey", "apex_s_m": 2737.0, "s_frac": 0.770136},
+    {"number": 11, "name": null, "short_name": null, "apex_s_m": 2985.0, "s_frac": 0.839918},
+    {"number": 12, "name": null, "short_name": null, "apex_s_m": 3288.0, "s_frac": 0.925176}
+  ]
+}

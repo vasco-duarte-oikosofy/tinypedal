@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "track_name": "Michelin Raceway Road Atlanta",
+  "lap_length_m": 4048.88,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": null, "short_name": null, "apex_s_m": 435.0, "s_frac": 0.107437},
+    {"number": 2, "name": null, "short_name": null, "apex_s_m": 823.0, "s_frac": 0.203266},
+    {"number": 3, "name": null, "short_name": null, "apex_s_m": 835.0, "s_frac": 0.20623},
+    {"number": 4, "name": "Turn 4 (The Esses)", "short_name": "Esses", "apex_s_m": 1120.0, "s_frac": 0.27662},
+    {"number": 5, "name": null, "short_name": null, "apex_s_m": 1422.0, "s_frac": 0.351208},
+    {"number": 6, "name": null, "short_name": null, "apex_s_m": 1972.0, "s_frac": 0.487048},
+    {"number": 7, "name": null, "short_name": null, "apex_s_m": 2139.0, "s_frac": 0.528294},
+    {"number": 8, "name": null, "short_name": null, "apex_s_m": 2470.0, "s_frac": 0.610045},
+    {"number": 9, "name": null, "short_name": null, "apex_s_m": 3100.0, "s_frac": 0.765644},
+    {"number": 10, "name": "Turn 10A", "short_name": null, "apex_s_m": 3517.0, "s_frac": 0.868635},
+    {"number": 11, "name": "Turn 10B", "short_name": null, "apex_s_m": 3575.0, "s_frac": 0.88296},
+    {"number": 12, "name": null, "short_name": null, "apex_s_m": 3710.0, "s_frac": 0.916303},
+    {"number": 13, "name": null, "short_name": null, "apex_s_m": 3990.0, "s_frac": 0.985458}
+  ]
+}

@@ -20,13 +20,14 @@
 Track map Widget
 """
 
-from PySide2.QtCore import QRectF, Qt
-from PySide2.QtGui import QBrush, QPainter, QPainterPath, QPen, QPixmap
+from PySide2.QtCore import QPointF, QRectF, Qt
+from PySide2.QtGui import QBrush, QFont, QFontMetricsF, QPainter, QPainterPath, QPen, QPixmap
 
 from .. import calculation as calc
 from ..api_control import api
 from ..formatter import random_color_class
 from ..module_info import minfo
+from .. import turn_labels
 from ..validator import vehicle_position_interp
 from ._base import Overlay
 
@@ -119,6 +120,13 @@ class Realtime(Overlay):
         if self.wcfg["show_safety_car"]:
             self.gen_position_interp = vehicle_position_interp()
 
+        # Turn name labels (see tinypedal/turn_labels.py)
+        self.show_turn_name = self.wcfg["show_turn_name"]
+        self.turn_coords = ()
+        self.turn_data = None
+        self.turn_font = QFont(self.wcfg["font_name"])
+        self.turn_font.setWeight(QFont.Bold)
+
         # Last data
         self.last_modified = 0
         self.last_veh_data_version = None
@@ -128,6 +136,7 @@ class Realtime(Overlay):
         self.map_scale = 1.0
         self.map_offset = (0, 0)
         self.map_orient = 0.0  # radians
+        self.map_orient_deg = 0  # degrees, for the turn label layout
 
         self.update_map(-1)
 
@@ -149,6 +158,14 @@ class Realtime(Overlay):
         if self.last_modified != data:
             self.last_modified = data
             raw_data = minfo.mapping.coordinates if data != -1 else None
+            self.turn_coords = raw_data or ()
+            self.turn_data = (
+                turn_labels.load_turn_labels(
+                    api.read.session.track_name(),
+                    (turn_labels.default_data_path(), self.cfg.path.track_map),
+                )
+                if self.show_turn_name and raw_data else None
+            )
             map_path = self.create_map_path(raw_data)
             self.draw_map_image(map_path, self.circular_map)
             if self.wcfg["show_proximity_circle"]:
@@ -185,6 +202,7 @@ class Realtime(Overlay):
             angle = max(int(self.wcfg["display_orientation"]), 0)
             angle = angle - angle // 360 * 360
             self.map_orient = calc.deg2rad(angle)
+            self.map_orient_deg = angle
             (self.map_scaled, self.map_range, self.map_scale, self.map_offset
              ) = calc.scale_map(raw_coords, self.area_size, self.area_margin, angle)
 
@@ -213,6 +231,7 @@ class Realtime(Overlay):
             self.map_scaled = None
             self.circular_map = True
             self.map_orient = 0
+            self.map_orient_deg = 0
             map_path.addEllipse(
                 self.area_margin,
                 self.area_margin,
@@ -298,6 +317,55 @@ class Realtime(Overlay):
                     self.area_margin + self.wcfg["start_line_length"],
                     self.area_size * 0.5
                 )
+
+        # Turn name labels, drawn last so they stay on top of the map
+        if self.show_turn_name and self.map_scaled:
+            self.draw_turn_names(painter)
+
+        painter.end()
+
+    def draw_turn_names(self, painter):
+        """Draw turn name labels beside their corners"""
+        if not self.turn_data:
+            return
+        _lap_length, turns = self.turn_data
+        try:
+            anchors = turn_labels.anchor_turns(
+                turns, self.turn_coords, self.map_orient_deg,
+                self.map_range, self.map_scale, self.map_offset,
+            )
+        except (IndexError, TypeError, ValueError):
+            return
+        # The type follows the map size, but never outgrows the widget font the
+        # user picked: that keeps labels proportionate on a small overlay.
+        size = min(turn_labels.font_size(self.temp_map_size),
+                   max(self.wcfg["font_size"], 5))
+        self.turn_font.setPixelSize(max(round(size), 1))
+        metrics = QFontMetricsF(self.turn_font)
+
+        def measure(text, _size):
+            rect = metrics.boundingRect(text)
+            return rect.width(), rect.height()
+
+        placed, _dropped = turn_labels.plan_turn_labels(
+            anchors, self.temp_map_size, measure,
+            map_width=self.area_size, map_height=self.area_size,
+        )
+        if not placed:
+            return
+
+        painter.setFont(self.turn_font)
+        pen = QPen(self.wcfg["turn_name_outline_color"])
+        pen.setWidthF(max(size * 0.16, 1.0))
+        pen.setJoinStyle(Qt.RoundJoin)
+        painter.setPen(pen)
+        painter.setBrush(QBrush(Qt.NoBrush))
+        brush = QBrush(self.wcfg["turn_name_color"])
+        for label in placed:
+            path = QPainterPath()
+            path.addText(QPointF(label.x, label.y + metrics.ascent()), self.turn_font, label.text)
+            painter.drawPath(path)   # outline first, so text stays readable
+            painter.fillPath(path, brush)
 
     def draw_vehicle_on_circle(self, painter, veh_info, veh_draw_order):
         """Draw vehicles on temporary circle map"""
