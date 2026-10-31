@@ -64,10 +64,41 @@ def measure_for(widget):
                                 metrics.boundingRect(text).height())
 
 
+def interior_pixels(widget, placed):
+    """Pixels strictly inside the glyphs, as (x, y) pairs."""
+    from PySide2.QtGui import QPainterPath
+    from PySide2.QtCore import QPointF
+
+    metrics = QFontMetricsF(widget.turn_font)
+    points = []
+    for label in placed:
+        path = QPainterPath()
+        path.addText(QPointF(label.x, label.y + metrics.ascent()),
+                     widget.turn_font, label.text)
+        points.extend(
+            (x, y)
+            for y in range(int(label.y) - 2, int(label.y + label.height) + 3)
+            for x in range(int(label.x) - 2, int(label.x + label.width) + 3)
+            if path.contains(QPointF(x + 0.5, y + 0.5))
+        )
+    return points
+
+
+def interior_colours(pixmap, points):
+    """Colours of the given pixels, so two renders can be compared exactly."""
+    image = pixmap.toImage()
+    colours = []
+    for x, y in points:
+        if 0 <= x < image.width() and 0 <= y < image.height():
+            colour = image.pixelColor(x, y)
+            colours.append((colour.red(), colour.green(), colour.blue(), colour.alpha()))
+        else:
+            colours.append(None)
+    return colours
+
+
 def ink_inside(pixmap, placed):
     """Painted pixels inside the label boxes of a rendered pixmap."""
-    if not placed:
-        return 0
     image = pixmap.toImage()
     total = 0
     for label in placed:
@@ -77,46 +108,6 @@ def ink_inside(pixmap, placed):
                     if image.pixelColor(x, y).alpha() > 60:
                         total += 1
     return total
-
-
-def halo_growth(widget, placed):
-    """Ink pixels of the same labels drawn with and without the halo."""
-    if not placed:
-        return 0, 0
-    from PySide2.QtGui import QBrush, QColor, QImage, QPainter, QPainterPath, QPen
-    from PySide2.QtCore import QPointF, Qt
-
-    metrics = QFontMetricsF(widget.turn_font)
-    size = min(turn_labels.font_size(widget.temp_map_size), max(widget.wcfg["font_size"], 5))
-    width = widget.area_size
-    height = widget.area_size
-
-    def ink(with_halo):
-        image = QImage(width, height, QImage.Format_ARGB32)
-        image.fill(Qt.transparent)
-        painter = QPainter(image)
-        painter.setRenderHint(QPainter.Antialiasing, True)
-        painter.setFont(widget.turn_font)
-        brush = QBrush(QColor(widget.wcfg["turn_name_color"]))
-        for label in placed:
-            path = QPainterPath()
-            path.addText(QPointF(label.x, label.y + metrics.ascent()),
-                         widget.turn_font, label.text)
-            if with_halo:
-                pen = QPen(QColor(widget.wcfg["turn_name_outline_color"]))
-                pen.setWidthF(widget.turn_halo_width(size))
-                pen.setJoinStyle(Qt.RoundJoin)
-                painter.setPen(pen)
-                painter.setBrush(QBrush(Qt.NoBrush))
-                painter.drawPath(path)
-            painter.fillPath(path, brush)
-        painter.end()
-        return sum(
-            1 for y in range(height) for x in range(width)
-            if image.pixelColor(x, y).alpha() > 60
-        )
-
-    return ink(True), ink(False)
 
 
 def render(widget, coords):
@@ -175,16 +166,53 @@ def main():
               all(label.x >= 0 and label.y >= 0
                   and label.x + label.width <= widget.area_size
                   and label.y + label.height <= widget.area_size for label in placed))
-        halo_ink, plain_ink = halo_growth(widget, planned.get("placed", []))
-        check("the halo does not fatten the glyphs into blobs",
-              halo_ink <= plain_ink * 1.25,
-              f"{halo_ink} ink px with the halo vs {plain_ink} without "
-              f"(+{100 * (halo_ink - plain_ink) / max(plain_ink, 1):.0f}%)")
+        # The label text must be SOLID and white: at ~12 px a plain fill leaves the
+        # stems half transparent (measured 33 % of the interior opaque), which is
+        # exactly what "it is just the outline" looks like. The self-stroke in the
+        # text colour is what fixes it.
+        interior = interior_pixels(widget, planned.get("placed", []))
+        colours = interior_colours(widget.pixmap_map, interior)
+        worst_alpha = min(c[3] for c in colours if c is not None)
+        worst_red = min(c[0] for c in colours if c is not None)
+        check("every glyph interior pixel is solid white",
+              bool(interior) and worst_alpha > 230 and worst_red > 235,
+              f"{len(interior)} interior px, worst alpha {worst_alpha}, worst red {worst_red}")
+
+        # The halo is drawn OUTSIDE the letters only: with it on there is dark ink,
+        # with it off there is none - and the text above stays untouched either way.
+        def dark_pixels(pixmap, labels):
+            # Only around the labels: the map's own dark outline must not be counted.
+            image = pixmap.toImage()
+            boxes = {(x, y)
+                     for label in labels
+                     for y in range(int(label.y) - 3, int(label.y + label.height) + 4)
+                     for x in range(int(label.x) - 3, int(label.x + label.width) + 4)}
+            return sum(
+                1 for (x, y) in boxes
+                if 0 <= x < image.width() and 0 <= y < image.height()
+                and image.pixelColor(x, y).alpha() > 40
+                and image.pixelColor(x, y).red() < 120
+            )
+
+        placed_now = planned.get("placed", [])
+        dark_with = dark_pixels(widget.pixmap_map, placed_now)
+        widget.wcfg["turn_name_outline_color"] = "#00000000"
+        dark_without = dark_pixels(render(widget, coords), placed_now)
+        widget.wcfg["turn_name_outline_color"] = "#88000000"
+        check("the halo ring is drawn outside the letters",
+              dark_with > dark_without * 2 and dark_with - dark_without > 500,
+              f"{dark_with} dark px around the labels with the halo, "
+              f"{dark_without} without")
+
         check("the halo scales with the type",
               abs(widget.turn_halo_width(11.8) - 0.71) < 0.01
               and abs(widget.turn_halo_width(20) - 1.2) < 0.01,
               f"{widget.turn_halo_width(11.8):.2f} px at 11.8 px, "
               f"{widget.turn_halo_width(20):.2f} px at 20 px")
+        check("the self-stroke scales with the type",
+              abs(widget.turn_solidify_width(11.8) - 1.0) < 0.02
+              and abs(widget.turn_solidify_width(20) - 1.7) < 0.05,
+              f"{widget.turn_solidify_width(11.8):.2f} px at 11.8 px")
         check("the type is readable at the default map size",
               5 <= turn_labels.font_size(planned.get("map_size", 0)) <= 18,
               f"{turn_labels.font_size(planned.get('map_size', 0)):.1f} px")

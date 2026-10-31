@@ -1,18 +1,26 @@
-"""End-to-end turn label render check against the shipped data.
+"""Turn label review images, rendered by the REAL widget.
 
-Runs headless (no display needed):
+Run with the venv (no display needed, no pytest):
 
-    QT_QPA_PLATFORM=offscreen .venv/Scripts/python.exe tests/test_turn_labels_render.py
+    .venv/Scripts/python.exe tests/test_turn_labels_render.py [--save <folder>]
 
 For every track that has both a TinyPedal track map and exported turn labels,
-this loads the real SVG, anchors the real corners on it, lays the labels out
-with real Qt font metrics, paints the map + labels into a pixmap, and checks:
+this builds the real track map widget, feeds it the real recorded map and the
+real turn data, and draws the widget's own pixmap. Nothing about the drawing is
+duplicated here: the images are the widget's output, so they cannot drift from
+what the app shows (an earlier copy of this test painted its own version and
+shipped two rounds of unusable review images).
 
-- every corner gets a label inside the canvas;
-- no two labels overlap;
-- a PNG is written so the result can be inspected by eye.
+Checks, for every track:
+- the widget plans a label for every corner (or reports the few it drops);
+- labels never overlap and stay on the canvas;
+- the saved picture really contains them.
 
-Add `--save <folder>` to keep the rendered images.
+Do NOT force the offscreen platform: on Windows its plugin has an EMPTY font
+database, so every glyph renders as a hollow "tofu" box. Qt's default platform
+renders into a pixmap without ever showing a window; on a headless box set
+QT_QPA_PLATFORM=offscreen with a fontconfig font set installed.
+assert_fonts_available() refuses to run without real glyphs.
 """
 
 import os
@@ -22,34 +30,26 @@ import unicodedata
 
 sys.path.append(".")
 
-# Do NOT force the offscreen platform: on Windows its plugin has an EMPTY font
-# database, so every glyph renders as a hollow "tofu" box and the layout is
-# measured against the wrong metrics. Qt's default platform renders happily into
-# a QImage without ever showing a window. On a headless box set
-# QT_QPA_PLATFORM=offscreen with a fontconfig font set installed;
-# assert_fonts_available() below refuses to run without real glyphs.
+from PySide2.QtGui import QFontDatabase, QFontMetricsF, QPixmap
+from PySide2.QtWidgets import QApplication
 
-from PySide2.QtCore import QPointF, Qt
-from PySide2.QtGui import (
-    QBrush, QColor, QFont, QFontDatabase, QFontMetricsF, QGuiApplication, QImage,
-    QPainter, QPainterPath, QPen,
-)
-
-from tinypedal import calculation as calc
 from tinypedal import turn_labels
+from tinypedal.const_file import FileExt
+from tinypedal.setting import cfg
 from tinypedal.userfile.track_map import load_track_map_file
 
 TRACKMAP = "trackmap/"
 TURNDATA = "tinypedal/data/turn_labels/"
 AREA_SIZE = 400
 AREA_MARGIN = 40
-# Widget default `font_size`: the widget never draws label type larger than this.
-FONT_CAP = 15
-MAP_COLOR = QColor("#FFFFFF")
-TEXT_COLOR = QColor("#CCCCCC")
-OUTLINE_COLOR = QColor("#88000000")
 
 FAILURES = []
+
+
+def check(name, condition, detail=""):
+    print(f"  [{'PASS' if condition else 'FAIL'}] {name}{' — ' + detail if detail else ''}")
+    if not condition:
+        FAILURES.append(name)
 
 
 def safe_name(track_name):
@@ -58,23 +58,56 @@ def safe_name(track_name):
     return re.sub(r"[^a-z0-9]+", "-", ascii_name.lower()).strip("-")
 
 
-def assert_fonts_available():
+def assert_fonts_available(font):
     """Refuse to render review images with a font that has no glyphs."""
     families = QFontDatabase().families()
-    font = QFont("Consolas")
-    font.setPixelSize(7)
     metrics = QFontMetricsF(font)
     check("the platform provides fonts", len(families) > 0,
-          f"{len(families)} families on platform {QGuiApplication.platformName()!r}")
+          f"{len(families)} families on platform {QApplication.platformName()!r}")
     check("the label font can draw letters", metrics.inFont("A"),
           "every glyph would render as a tofu box")
     return bool(families) and metrics.inFont("A")
 
 
-def check(name, condition, detail=""):
-    print(f"  [{'PASS' if condition else 'FAIL'}] {name}{' — ' + detail if detail else ''}")
-    if not condition:
-        FAILURES.append(name)
+def load_cfg():
+    """A real preset, because importing the widget chain needs one loaded."""
+    cfg.load_global()
+    cfg.set_next_to_load(f"{cfg.preset_files()[0]}{FileExt.JSON}")
+    cfg.load_user()
+
+
+def make_widget(area_size=AREA_SIZE):
+    from tinypedal.widget.track_map import Realtime
+
+    widget = Realtime(cfg, "track_map")
+    widget.wcfg["area_size"] = area_size
+    widget.wcfg["area_margin"] = AREA_MARGIN
+    widget.wcfg["show_turn_name"] = True
+    widget.area_size = max(area_size, 100)
+    widget.area_margin = min(max(AREA_MARGIN, 0), int(widget.area_size / 4))
+    widget.temp_map_size = widget.area_size - widget.area_margin * 2
+    widget.resize(widget.area_size, widget.area_size)
+    widget.pixmap_map = QPixmap(widget.area_size, widget.area_size)
+    return widget
+
+
+def plan_for(widget, turns, coords):
+    """The labels the widget plans for this map (same inputs, same code)."""
+    anchors = turn_labels.anchor_turns(
+        turns, coords, widget.map_orient_deg,
+        widget.map_range, widget.map_scale, widget.map_offset)
+    metrics = QFontMetricsF(widget.turn_font)
+    size = min(turn_labels.font_size(widget.temp_map_size),
+               max(widget.wcfg["font_size"], 5))
+    solidify = widget.turn_solidify_width(size)
+
+    def measure(text, _size):
+        rect = metrics.boundingRect(text)
+        return rect.width() + solidify, rect.height() + solidify
+
+    return turn_labels.plan_turn_labels(
+        anchors, widget.temp_map_size, measure,
+        map_width=widget.area_size, map_height=widget.area_size)
 
 
 def overlaps(a, b):
@@ -84,67 +117,37 @@ def overlaps(a, b):
     )
 
 
-def render_track(app, track_name, save_folder=None, angle=0, area_size=AREA_SIZE):
-    """Render one track; returns (placed, dropped, image)."""
+def ink_inside(pixmap, placed):
+    """Painted pixels inside the label boxes of a rendered pixmap."""
+    image = pixmap.toImage()
+    total = 0
+    for label in placed:
+        for y in range(int(label.y), int(label.y + label.height) + 1):
+            for x in range(int(label.x), int(label.x + label.width) + 1):
+                if 0 <= x < image.width() and 0 <= y < image.height():
+                    if image.pixelColor(x, y).alpha() > 60:
+                        total += 1
+    return total
+
+
+def render_track(widget, track_name, save_folder=None, angle=0):
+    """Draw one track with the real widget; returns (placed, dropped, pixmap)."""
     coords, _dists, _sectors = load_track_map_file(TRACKMAP, track_name)
     data = turn_labels.load_turn_labels(track_name, [TURNDATA])
     if coords is None or data is None:
         return None
-
     _lap_length, turns = data
-    map_scaled, map_range, map_scale, map_offset = calc.scale_map(
-        coords, area_size, AREA_MARGIN, angle)
-    map_size = area_size - AREA_MARGIN * 2
-    anchors = turn_labels.anchor_turns(
-        turns, coords, angle, map_range, map_scale, map_offset)
 
-    font = QFont("Consolas")
-    font.setWeight(QFont.Bold)
-    size = min(turn_labels.font_size(map_size), FONT_CAP)
-    font.setPixelSize(max(round(size), 1))
-    metrics = QFontMetricsF(font)
+    widget.turn_data = data
+    widget.wcfg["display_orientation"] = angle
+    path = widget.create_map_path(coords)
+    widget.draw_map_image(path, widget.circular_map)
+    pixmap = widget.pixmap_map.copy()
 
-    def measure(text, _size):
-        rect = metrics.boundingRect(text)
-        return rect.width(), rect.height()
-
-    placed, dropped = turn_labels.plan_turn_labels(
-        anchors, map_size, measure, map_width=area_size, map_height=area_size)
-
-    image = QImage(area_size, area_size, QImage.Format_ARGB32)
-    image.fill(Qt.transparent)
-    painter = QPainter(image)
-    painter.setRenderHint(QPainter.Antialiasing, True)
-    path = QPainterPath()
-    for index, point in enumerate(map_scaled):
-        if index == 0:
-            path.moveTo(*point)
-        else:
-            path.lineTo(*point)
-    path.closeSubpath()
-    pen = QPen(MAP_COLOR)
-    pen.setWidth(4)
-    pen.setJoinStyle(Qt.RoundJoin)
-    painter.setPen(pen)
-    painter.drawPath(path)
-
-    painter.setFont(font)
-    halo = QPen(OUTLINE_COLOR)
-    halo.setWidthF(max(size * 0.16, 1.0))
-    halo.setJoinStyle(Qt.RoundJoin)
-    brush = QBrush(TEXT_COLOR)
-    for label in placed:
-        text_path = QPainterPath()
-        text_path.addText(QPointF(label.x, label.y + metrics.ascent()), font, label.text)
-        painter.setPen(halo)
-        painter.setBrush(QBrush(Qt.NoBrush))
-        painter.drawPath(text_path)
-        painter.fillPath(text_path, brush)
-    painter.end()
-
+    placed, dropped = plan_for(widget, turns, coords)
     if save_folder:
-        image.save(os.path.join(save_folder, f"track-{safe_name(track_name)}.png"))
-    return placed, dropped, image
+        pixmap.save(os.path.join(save_folder, f"track-{safe_name(track_name)}.png"))
+    return placed, dropped, pixmap
 
 
 def main(argv):
@@ -153,9 +156,11 @@ def main(argv):
         save_folder = argv[argv.index("--save") + 1]
         os.makedirs(save_folder, exist_ok=True)
 
-    app = QGuiApplication.instance() or QGuiApplication([])
-    if not assert_fonts_available():
-        print("\nRESULT: FAIL (no usable fonts - leave QT_QPA_PLATFORM unset so Qt "
+    app = QApplication.instance() or QApplication([])
+    load_cfg()
+    widget = make_widget()
+    if not assert_fonts_available(widget.turn_font):
+        print("\nRESULT: FAIL (no usable fonts — leave QT_QPA_PLATFORM unset so Qt "
               "can use a platform with a font database)")
         return 1
 
@@ -168,33 +173,39 @@ def main(argv):
 
     total_turns = total_labels = total_named = named_turns = 0
     geometry_ok = True
+    empty_images = []
     for track_name in tracks:
-        result = render_track(app, track_name, save_folder)
+        result = render_track(widget, track_name, save_folder)
         if result is None:
             check(f"{track_name}: has a track map", False, "no map polyline")
             continue
-        placed, dropped, image = result
-        data = turn_labels.load_turn_labels(track_name, [TURNDATA])
-        turns = len(data[1])
-        named_turns += sum(1 for turn in data[1] if turn.get("name"))
-        total_turns += turns
+        placed, dropped, pixmap = result
+        _lap_length, turns = turn_labels.load_turn_labels(track_name, [TURNDATA])
+        total_turns += len(turns)
         total_labels += len(placed)
+        total_named += sum(1 for label in placed if " " in label.text)
+        named_turns += sum(1 for turn in turns if turn.get("name"))
+
+        clean = not any(overlaps(a, b) for i, a in enumerate(placed) for b in placed[i + 1:])
         on_canvas = all(
             label.x >= 0 and label.y >= 0
-            and label.x + label.width <= AREA_SIZE
-            and label.y + label.height <= AREA_SIZE
+            and label.x + label.width <= widget.area_size
+            and label.y + label.height <= widget.area_size
             for label in placed
         )
-        clean = not any(overlaps(a, b) for i, a in enumerate(placed) for b in placed[i + 1:])
-        painted = image.width() > 0
-        geometry_ok = geometry_ok and clean and on_canvas and painted
-        if not (clean and on_canvas and painted):
-            check(f"{track_name}: {len(placed)}/{turns} labels", False,
+        if ink_inside(pixmap, placed) == 0:
+            empty_images.append(track_name)
+        geometry_ok = geometry_ok and clean and on_canvas
+        if not (clean and on_canvas):
+            check(f"{track_name}: {len(placed)}/{len(turns)} labels", False,
                   f"overlaps={not clean} off_canvas={not on_canvas}")
         named = sum(1 for label in placed if " " in label.text)
-        total_named += named
-        print(f"    {track_name}: {len(placed)}/{turns} labels "
+        print(f"    {track_name}: {len(placed)}/{len(turns)} labels "
               f"({named} named), {len(dropped)} dropped")
+
+    check("no overlaps, nothing off canvas on any shipped track", geometry_ok)
+    check("every rendered track actually shows its labels", not empty_images,
+          ", ".join(empty_images) or "all tracks inked")
 
     # Type is 1.6x the compare app's here (see turn_labels.TURN_LABEL_CONFIG), which
     # at the default 400 px map costs the last few crowded corners their label. The
@@ -208,31 +219,30 @@ def main(argv):
           f"{total_named}/{named_turns} named corners keep a name")
 
     print("\n-- same tracks on a 600 px widget --")
+    big = make_widget(600)
     big_labels = big_turns = big_named = big_named_turns = 0
     for track_name in tracks:
-        result = render_track(app, track_name, None, 0, area_size=600)
+        result = render_track(big, track_name)
         if result is None:
             continue
         placed = result[0]
-        data = turn_labels.load_turn_labels(track_name, [TURNDATA])
-        big_turns += len(data[1])
+        _lap_length, turns = turn_labels.load_turn_labels(track_name, [TURNDATA])
+        big_turns += len(turns)
         big_labels += len(placed)
         big_named += sum(1 for label in placed if " " in label.text)
-        big_named_turns += sum(1 for turn in data[1] if turn.get("name"))
+        big_named_turns += sum(1 for turn in turns if turn.get("name"))
     check("a 600 px widget labels every corner", big_labels == big_turns,
           f"{big_labels}/{big_turns} corners")
     check("a 600 px widget keeps the names", big_named >= big_named_turns * 0.95,
           f"{big_named}/{big_named_turns} named corners keep a name")
-    check("no overlaps, nothing off canvas on any shipped track", geometry_ok)
 
-    # Rotation must not break the layout.
     print("\n-- rotated map --")
-    placed, _dropped, _image = render_track(app, tracks[0], None, angle=90)
+    placed, _dropped, _pixmap = render_track(widget, tracks[0], None, angle=90)
     check("labels still fit a 90 degree rotated map",
           bool(placed) and all(
               label.x >= 0 and label.y >= 0
-              and label.x + label.width <= AREA_SIZE
-              and label.y + label.height <= AREA_SIZE for label in placed),
+              and label.x + label.width <= widget.area_size
+              and label.y + label.height <= widget.area_size for label in placed),
           f"{len(placed)} labels")
 
     print(f"\n{'RESULT: PASS' if not FAILURES else 'RESULT: FAIL (' + str(len(FAILURES)) + ')'}")

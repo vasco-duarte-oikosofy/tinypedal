@@ -39,3 +39,8 @@ lap-telemetry project, which owns the data:
   lap), which is interpolated into the recorded map polyline by accumulated
   length — the SVG `dist` values in some shipped maps run backwards;
 - the plan is in lap-telemetry `docs/specs/MAP_TURN_NAMES.md`.
+
+The labels are filled *and* stroked in `turn_name_color`: at ~12 px a plain fill
+leaves only 33 % of the glyph interior opaque, and the text reads as an outline.
+The halo is an outside-only ring (glyph stroke subtracted from a thicker stroke),
+painted after the text so it never covers a letter.

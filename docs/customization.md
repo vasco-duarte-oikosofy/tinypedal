@@ -2171,11 +2171,17 @@ widget `font_size`. On very crowded circuits a slightly crowded map may drop the
 last few labels; increasing `area_size` gives them room again.
 
     turn_name_color
-Set turn name text color.
+Set turn name text color. Default is `#FFFFFF`.
+
+Note: presets created before this option changed keep their old value
+(`#CCCCCC`); set it to `#FFFFFF` or delete the line to get white labels. The text
+is filled *and* stroked in this color, because at label size a plain fill leaves
+the stems half transparent and the labels read as outlines.
 
     turn_name_outline_color
 Set turn name outline color, which keeps the text readable where it crosses the
-map line. Set the alpha value to `00` to disable the outline.
+map line. The outline is drawn outside the letters only, so it never eats the
+text itself. Set the alpha value to `00` to disable it.
 
     show_position_mark
 Show player's current position line mark.
@@ -2903,11 +2909,17 @@ widget `font_size`. On very crowded circuits a slightly crowded map may drop the
 last few labels; increasing `area_size` gives them room again.
 
     turn_name_color
-Set turn name text color.
+Set turn name text color. Default is `#FFFFFF`.
+
+Note: presets created before this option changed keep their old value
+(`#CCCCCC`); set it to `#FFFFFF` or delete the line to get white labels. The text
+is filled *and* stroked in this color, because at label size a plain fill leaves
+the stems half transparent and the labels read as outlines.
 
     turn_name_outline_color
 Set turn name outline color, which keeps the text readable where it crosses the
-map line. Set the alpha value to `00` to disable the outline.
+map line. The outline is drawn outside the letters only, so it never eats the
+text itself. Set the alpha value to `00` to disable it.
 
     show_vehicle_standings
 Show vehicle standings info on navigation map.
@@ -4116,11 +4128,17 @@ widget `font_size`. On very crowded circuits a slightly crowded map may drop the
 last few labels; increasing `area_size` gives them room again.
 
     turn_name_color
-Set turn name text color.
+Set turn name text color. Default is `#FFFFFF`.
+
+Note: presets created before this option changed keep their old value
+(`#CCCCCC`); set it to `#FFFFFF` or delete the line to get white labels. The text
+is filled *and* stroked in this color, because at label size a plain fill leaves
+the stems half transparent and the labels read as outlines.
 
     turn_name_outline_color
 Set turn name outline color, which keeps the text readable where it crosses the
-map line. Set the alpha value to `00` to disable the outline.
+map line. The outline is drawn outside the letters only, so it never eats the
+text itself. Set the alpha value to `00` to disable it.
 
     show_proximity_circle
 Show proximity circle around player's position, which helps to quickly spot player and nearby opponents on map.

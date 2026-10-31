@@ -21,7 +21,10 @@ Track map Widget
 """
 
 from PySide2.QtCore import QPointF, QRectF, Qt
-from PySide2.QtGui import QBrush, QFont, QFontMetricsF, QPainter, QPainterPath, QPen, QPixmap
+from PySide2.QtGui import (
+    QBrush, QColor, QFont, QFontMetricsF, QPainter, QPainterPath,
+    QPainterPathStroker, QPen, QPixmap,
+)
 
 from .. import calculation as calc
 from ..api_control import api
@@ -44,9 +47,20 @@ class Realtime(Overlay):
     # outline a fringe instead of a blur at every size the widget draws.
     TURN_HALO_EM = 0.06
 
+    # At 10-12 px the stems of a hinted font are about 1 px, so a plain fill leaves
+    # them faintly transparent: measured on the real Monza labels only 33 % of the
+    # pixels inside the glyphs reached opaque white, and the text reads as an
+    # outline. Stroking the glyph in its own colour thickens every stem by this
+    # much and takes that to 71 %, which is what makes the labels look solid.
+    TURN_SOLIDIFY_EM = 0.085
+
     def turn_halo_width(self, size: float) -> float:
         """Outline pen width for label type of `size` pixels."""
         return self.TURN_HALO_EM * size
+
+    def turn_solidify_width(self, size: float) -> float:
+        """Self-stroke width that fills out the stems of small label type."""
+        return self.TURN_SOLIDIFY_EM * size
 
     def __init__(self, config, widget_name):
         # Assign base setting
@@ -357,10 +371,13 @@ class Realtime(Overlay):
                    max(self.wcfg["font_size"], 5))
         self.turn_font.setPixelSize(max(round(size), 1))
         metrics = QFontMetricsF(self.turn_font)
+        solidify = self.turn_solidify_width(size)
 
         def measure(text, _size):
+            # Reserve the self-stroke too: the labels are laid out so that no two
+            # ever overlap, and the stroke widens every glyph a little.
             rect = metrics.boundingRect(text)
-            return rect.width(), rect.height()
+            return rect.width() + solidify, rect.height() + solidify
 
         placed, _dropped = turn_labels.plan_turn_labels(
             anchors, self.temp_map_size, measure,
@@ -370,17 +387,41 @@ class Realtime(Overlay):
             return
 
         painter.setFont(self.turn_font)
-        pen = QPen(self.wcfg["turn_name_outline_color"])
-        pen.setWidthF(self.turn_halo_width(size))
-        pen.setJoinStyle(Qt.RoundJoin)
-        painter.setPen(pen)
-        painter.setBrush(QBrush(Qt.NoBrush))
-        brush = QBrush(self.wcfg["turn_name_color"])
+        fill_color = QColor(self.wcfg["turn_name_color"])
+        fill_brush = QBrush(fill_color)
+        fill_pen = QPen(fill_color)
+        fill_pen.setWidthF(solidify)
+        fill_pen.setJoinStyle(Qt.RoundJoin)
+        fill_pen.setCapStyle(Qt.RoundCap)
+        halo_color = QColor(self.wcfg["turn_name_outline_color"])
+        halo_brush = QBrush(halo_color)
+        # The halo is a ring OUTSIDE the letters. A pen is centred on the outline, so
+        # stroking the text path directly would paint over the letter's interior and
+        # leave a hollow outline; subtracting the (already thickened) glyph from its
+        # own stroke keeps the ring outside every pixel of text.
+        ring_stroker = QPainterPathStroker()
+        ring_stroker.setWidth(2 * (self.turn_halo_width(size) + solidify * 0.5))
+        ring_stroker.setJoinStyle(Qt.RoundJoin)
+        ring_stroker.setCapStyle(Qt.RoundCap)
+        solid_stroker = QPainterPathStroker()
+        solid_stroker.setWidth(solidify)
+        solid_stroker.setJoinStyle(Qt.RoundJoin)
+        solid_stroker.setCapStyle(Qt.RoundCap)
+        painter.setPen(Qt.NoPen)
+        painter.setBrush(Qt.NoBrush)
         for label in placed:
             path = QPainterPath()
             path.addText(QPointF(label.x, label.y + metrics.ascent()), self.turn_font, label.text)
-            painter.drawPath(path)   # outline first, so text stays readable
-            painter.fillPath(path, brush)
+            painter.fillPath(path, fill_brush)
+            painter.strokePath(path, fill_pen)
+            if halo_color.alpha() > 0:
+                # Ring last, and subtracted from the THICKENED glyph: createStroke()
+                # bands extend both ways from the outline, and at these sizes the
+                # inward band alone covers a whole 1 px stem, so subtracting the raw
+                # path is not enough - the ring would paint over the letters.
+                solid = path.united(solid_stroker.createStroke(path))
+                ring = ring_stroker.createStroke(path).subtracted(solid)
+                painter.fillPath(ring, halo_brush)
 
     def draw_vehicle_on_circle(self, painter, veh_info, veh_draw_order):
         """Draw vehicles on temporary circle map"""

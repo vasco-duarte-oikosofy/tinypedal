@@ -2888,7 +2888,7 @@ WIDGET_DEFAULT = {
         "sector_line_width": 3,
         "sector_line_length": 7,
         "show_turn_name": True,
-        "turn_name_color": "#CCCCCC",
+        "turn_name_color": "#FFFFFF",
         "turn_name_outline_color": "#88000000",
         "show_proximity_circle": True,
         "proximity_circle_radius": 150,
