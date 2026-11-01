@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "track_name": "Paul Ricard - 1A",
+  "lap_length_m": 5696.9,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": "S de la Verrerie 1", "short_name": "Verrerie 1", "apex_s_m": 607.0, "s_frac": 0.106549},
+    {"number": 2, "name": "S de la Verrerie 2", "short_name": "Verrerie 2", "apex_s_m": 852.0, "s_frac": 0.149555},
+    {"number": 3, "name": "Virage de l'Hôtel 1", "short_name": "Hôtel 1", "apex_s_m": 1279.0, "s_frac": 0.224508},
+    {"number": 4, "name": "Virage de l'Hôtel 2", "short_name": "Hôtel 2", "apex_s_m": 1360.0, "s_frac": 0.238726},
+    {"number": 5, "name": "Virage du Camp", "short_name": "Camp", "apex_s_m": 1480.0, "s_frac": 0.25979},
+    {"number": 6, "name": "Virage de la Sainte-Baume", "short_name": "Ste-Baume", "apex_s_m": 1600.0, "s_frac": 0.280854},
+    {"number": 7, "name": "Ligne Droite du Mistral", "short_name": "Mistral", "apex_s_m": 1841.0, "s_frac": 0.323158},
+    {"number": 8, "name": "Courbe de Signes", "short_name": "Signes", "apex_s_m": 3871.0, "s_frac": 0.679492},
+    {"number": 9, "name": "Double Droite du Beausset 1", "short_name": "Beausset 1", "apex_s_m": 4265.0, "s_frac": 0.748653},
+    {"number": 10, "name": "Double Droite du Beausset 2", "short_name": "Beausset 2", "apex_s_m": 4394.0, "s_frac": 0.771297},
+    {"number": 11, "name": "Virage de Bendor", "short_name": "Bendor", "apex_s_m": 4732.0, "s_frac": 0.830627},
+    {"number": 12, "name": "Courbe du Garlaban", "short_name": "Garlaban", "apex_s_m": 4846.0, "s_frac": 0.850638},
+    {"number": 13, "name": "Virage du Lac", "short_name": "Lac", "apex_s_m": 5227.0, "s_frac": 0.917517},
+    {"number": 14, "name": "Virage du Pont", "short_name": "Pont", "apex_s_m": 5377.0, "s_frac": 0.943847}
+  ]
+}
