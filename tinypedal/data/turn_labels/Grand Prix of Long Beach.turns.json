@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "track_name": "Grand Prix of Long Beach",
+  "lap_length_m": 3185.3,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": null, "short_name": null, "apex_s_m": 730.0, "s_frac": 0.229178},
+    {"number": 2, "name": null, "short_name": null, "apex_s_m": 909.0, "s_frac": 0.285373},
+    {"number": 3, "name": null, "short_name": null, "apex_s_m": 950.0, "s_frac": 0.298245},
+    {"number": 4, "name": null, "short_name": null, "apex_s_m": 1063.0, "s_frac": 0.333721},
+    {"number": 5, "name": null, "short_name": null, "apex_s_m": 1204.0, "s_frac": 0.377986},
+    {"number": 6, "name": null, "short_name": null, "apex_s_m": 1606.0, "s_frac": 0.504191},
+    {"number": 7, "name": null, "short_name": null, "apex_s_m": 1725.0, "s_frac": 0.54155},
+    {"number": 8, "name": null, "short_name": null, "apex_s_m": 1920.0, "s_frac": 0.602769},
+    {"number": 9, "name": null, "short_name": null, "apex_s_m": 2540.0, "s_frac": 0.797413},
+    {"number": 10, "name": null, "short_name": null, "apex_s_m": 2690.0, "s_frac": 0.844504},
+    {"number": 11, "name": null, "short_name": null, "apex_s_m": 2821.0, "s_frac": 0.885631}
+  ]
+}
