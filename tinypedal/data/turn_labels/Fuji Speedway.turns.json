@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "track_name": "Fuji Speedway",
+  "lap_length_m": 4538.9,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": "First Corner", "short_name": "First", "apex_s_m": 766.0, "s_frac": 0.168763},
+    {"number": 2, "name": "Coca-Cola", "short_name": null, "apex_s_m": 1314.0, "s_frac": 0.289497},
+    {"number": 3, "name": "100R", "short_name": "One Hundred R", "apex_s_m": 1699.0, "s_frac": 0.37432},
+    {"number": 4, "name": "Hairpin", "short_name": null, "apex_s_m": 2013.0, "s_frac": 0.4435},
+    {"number": 5, "name": "Dunlop Bypass", "short_name": "Dunlop", "apex_s_m": 2846.0, "s_frac": 0.627024},
+    {"number": 6, "name": null, "short_name": "Eleven", "apex_s_m": 2914.0, "s_frac": 0.642006},
+    {"number": 7, "name": null, "short_name": "Twelve", "apex_s_m": 3132.0, "s_frac": 0.690035},
+    {"number": 8, "name": "13th Corner", "short_name": "Thirteenth", "apex_s_m": 3151.0, "s_frac": 0.694221},
+    {"number": 9, "name": "Netz", "short_name": null, "apex_s_m": 3310.0, "s_frac": 0.729252},
+    {"number": 10, "name": "Netz Hairpin", "short_name": "Netz Hairpin", "apex_s_m": 3404.0, "s_frac": 0.749961},
+    {"number": 11, "name": "Panasonic", "short_name": null, "apex_s_m": 3672.0, "s_frac": 0.809007}
+  ]
+}
