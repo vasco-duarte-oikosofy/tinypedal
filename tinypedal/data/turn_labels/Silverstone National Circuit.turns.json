@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "track_name": "Silverstone National Circuit",
+  "lap_length_m": 2639.1,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": "Copse", "short_name": null, "apex_s_m": 359.0, "s_frac": 0.136031},
+    {"number": 2, "name": "Maggots", "short_name": null, "apex_s_m": 836.0, "s_frac": 0.316775},
+    {"number": 3, "name": "Becketts", "short_name": null, "apex_s_m": 1067.0, "s_frac": 0.404304},
+    {"number": 4, "name": "Brooklands", "short_name": null, "apex_s_m": 1924.0, "s_frac": 0.729036},
+    {"number": 5, "name": "Luffield", "short_name": null, "apex_s_m": 2105.0, "s_frac": 0.79762},
+    {"number": 6, "name": "Woodcote", "short_name": null, "apex_s_m": 2469.0, "s_frac": 0.935546}
+  ]
+}
