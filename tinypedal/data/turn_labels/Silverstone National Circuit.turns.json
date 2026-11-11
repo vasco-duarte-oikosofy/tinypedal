@@ -6,10 +6,10 @@
 ,
   "turns": [
     {"number": 1, "name": "Copse", "short_name": null, "apex_s_m": 359.0, "s_frac": 0.136031},
-    {"number": 2, "name": "Maggots", "short_name": null, "apex_s_m": 836.0, "s_frac": 0.316775},
-    {"number": 3, "name": "Becketts", "short_name": null, "apex_s_m": 1067.0, "s_frac": 0.404304},
-    {"number": 4, "name": "Brooklands", "short_name": null, "apex_s_m": 1924.0, "s_frac": 0.729036},
-    {"number": 5, "name": "Luffield", "short_name": null, "apex_s_m": 2105.0, "s_frac": 0.79762},
+    {"number": 2, "name": "Maggots", "short_name": null, "apex_s_m": 828.0, "s_frac": 0.313743},
+    {"number": 3, "name": "Becketts", "short_name": null, "apex_s_m": 1068.0, "s_frac": 0.404683},
+    {"number": 4, "name": "Brooklands", "short_name": null, "apex_s_m": 1921.0, "s_frac": 0.7279},
+    {"number": 5, "name": "Luffield", "short_name": null, "apex_s_m": 2102.0, "s_frac": 0.796484},
     {"number": 6, "name": "Woodcote", "short_name": null, "apex_s_m": 2469.0, "s_frac": 0.935546}
   ]
 }
