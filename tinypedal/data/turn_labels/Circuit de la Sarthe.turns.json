@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "track_name": "Circuit de la Sarthe",
   "lap_length_m": 13548.182,
   "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."

@@ -64,7 +64,8 @@ def main():
         check(support.assert_fonts_available(widget.turn_font), f'{size}px native font has real glyphs')
         for angle in (0, 90):
             widget.show_turn_name = True
-            placed, dropped, image = support.render_track(widget, TRACK, angle=angle)
+            placed, dropped, image = support.render_track(
+                widget, TRACK, angle=angle, ignore_placements=True)
             # 16 labels on a 5.8 km lap is the densest published overlay; the
             # 400px/0deg case is allowed one dropped label. Data keeps all 16.
             minimum = 15 if size == 400 and angle == 0 else TURNS
@@ -77,7 +78,8 @@ def main():
             check(sum(' ' in p.text for p in placed) >= TURNS - 1,
                   f'{size}px/{angle}deg: at most one number-only fallback')
             widget.show_turn_name = False
-            without = support.render_track(widget, TRACK, angle=angle)[2].toImage()
+            without = support.render_track(
+                widget, TRACK, angle=angle, ignore_placements=True)[2].toImage()
             with_labels = image.toImage()
             check(all(any(with_labels.pixel(x, y) != without.pixel(x, y)
                           for y in range(max(0, int(p.y)), min(size, int(p.y + p.height) + 1))

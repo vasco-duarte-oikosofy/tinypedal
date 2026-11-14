@@ -151,6 +151,7 @@ class Realtime(Overlay):
         self.show_turn_name = self.wcfg["show_turn_name"]
         self.map_coords = ()   # raw coordinates behind map_range/scale/offset
         self.turn_data = None
+        self.packaged_orientation = None
         self.turn_font = QFont(self.wcfg["font_name"])
         self.turn_font.setWeight(QFont.Bold)
 
@@ -185,13 +186,14 @@ class Realtime(Overlay):
         if self.last_modified != data:
             self.last_modified = data
             raw_data = minfo.mapping.coordinates if data != -1 else None
-            self.turn_data = (
-                turn_labels.load_turn_labels(
-                    api.read.session.track_name(),
-                    (turn_labels.default_data_path(), self.cfg.path.track_map),
-                )
-                if self.show_turn_name and raw_data else None
-            )
+            self.packaged_orientation = None
+            self.turn_data = None
+            if raw_data:
+                folders = (turn_labels.default_data_path(), self.cfg.path.track_map)
+                track_name = api.read.session.track_name()
+                self.packaged_orientation = turn_labels.load_track_orientation(track_name, folders)
+                if self.show_turn_name:
+                    self.turn_data = turn_labels.load_turn_labels(track_name, folders)
             map_path = self.create_map_path(raw_data)
             self.draw_map_image(map_path, self.circular_map)
             if self.wcfg["show_proximity_circle"]:
@@ -220,6 +222,20 @@ class Realtime(Overlay):
                 minfo.vehicles.dataSet[minfo.vehicles.playerIndex],
             )
 
+    def map_orientation(self) -> int:
+        """Rotation for the map: the packaged one unless the user overrides it.
+
+        A placement shipped in a track's turn-label file was drawn for one
+        rotation, so the file carries it. `display_orientation` still wins when
+        the user sets a non-zero value, which keeps the existing "rotate my
+        overlay" behaviour available.
+        """
+        configured = int(self.wcfg["display_orientation"])
+        if configured != 0 or not self.wcfg.get("use_track_orientation", True):
+            return configured
+        packaged = self.packaged_orientation
+        return configured if packaged is None else packaged
+
     def create_map_path(self, raw_coords=None):
         """Create map path"""
         # The turn labels anchor into exactly these coordinates; keeping them here
@@ -228,7 +244,7 @@ class Realtime(Overlay):
         map_path = QPainterPath()
         if raw_coords:
             dist = calc.distance(raw_coords[0], raw_coords[-1])
-            angle = max(int(self.wcfg["display_orientation"]), 0)
+            angle = self.map_orientation()
             angle = angle - angle // 360 * 360
             self.map_orient = calc.deg2rad(angle)
             self.map_orient_deg = angle
@@ -359,9 +375,14 @@ class Realtime(Overlay):
             return
         _lap_length, turns = self.turn_data
         try:
+            units_per_metre = (
+                turn_labels.path_length(self.map_coords) / _lap_length
+                if _lap_length else 1.0
+            )
             anchors = turn_labels.anchor_turns(
                 turns, self.map_coords, self.map_orient_deg,
                 self.map_range, self.map_scale, self.map_offset,
+                units_per_metre=units_per_metre,
             )
         except (IndexError, TypeError, ValueError):
             return

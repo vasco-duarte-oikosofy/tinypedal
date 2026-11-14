@@ -65,7 +65,8 @@ def main():
         check(support.assert_fonts_available(widget.turn_font), f'{size}px native font has real glyphs')
         for angle in (0, 90):
             widget.show_turn_name = True
-            placed, dropped, image = support.render_track(widget, TRACK, angle=angle)
+            placed, dropped, image = support.render_track(
+                widget, TRACK, angle=angle, ignore_placements=True)
             check(len(placed) == TURNS and not dropped,
                   f'{size}px/{angle}deg: {len(placed)}/{TURNS} labels (none dropped)')
             check(all(0 <= p.x and 0 <= p.y and p.x + p.width <= size and p.y + p.height <= size
@@ -75,7 +76,8 @@ def main():
             check(all(' ' in p.text for p in placed),
                   f'{size}px/{angle}deg: every label carries its official name, not just a number')
             widget.show_turn_name = False
-            without = support.render_track(widget, TRACK, angle=angle)[2].toImage()
+            without = support.render_track(
+                widget, TRACK, angle=angle, ignore_placements=True)[2].toImage()
             with_labels = image.toImage()
             check(all(any(with_labels.pixel(x, y) != without.pixel(x, y)
                           for y in range(max(0, int(p.y)), min(size, int(p.y + p.height) + 1))

@@ -53,7 +53,8 @@ def main():
         check(support.assert_fonts_available(widget.turn_font), f'{size}px native font has real glyphs')
         for angle in (0, 90):
             widget.show_turn_name = True
-            placed, dropped, image = support.render_track(widget, TRACK, angle=angle)
+            placed, dropped, image = support.render_track(
+                widget, TRACK, angle=angle, ignore_placements=True)
             # The published layout contract permits degradation on dense small
             # overlays (1.6x type). Preserve every name in DATA; do not move a
             # real apex or mutilate a proper name just to force 400px/90deg fit.
@@ -67,7 +68,8 @@ def main():
             check(sum(' ' in p.text for p in placed) >= 13,
                   f'{size}px/{angle}deg: at least 13 names retained; at most one number-only fallback')
             widget.show_turn_name = False
-            without = support.render_track(widget, TRACK, angle=angle)[2].toImage()
+            without = support.render_track(
+                widget, TRACK, angle=angle, ignore_placements=True)[2].toImage()
             with_labels = image.toImage()
             check(all(any(with_labels.pixel(x, y) != without.pixel(x, y)
                           for y in range(max(0, int(p.y)), min(size, int(p.y+p.height)+1))

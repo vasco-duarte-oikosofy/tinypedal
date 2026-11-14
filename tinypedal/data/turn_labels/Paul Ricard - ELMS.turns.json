@@ -1,25 +1,26 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "track_name": "Paul Ricard - ELMS",
   "lap_length_m": 5805.3,
-  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases. label_offset_m is the driver's own placement in metres from the corner (sim Y up), drawn for display_orientation; the widget uses it before its own placement rule, and falls back to that rule if it would collide.",
+  "display_orientation": 0
 ,
   "turns": [
-    {"number": 1, "name": "S de la Verrerie 1", "short_name": "Verrerie 1", "apex_s_m": 623.0, "s_frac": 0.107316},
-    {"number": 2, "name": "S de la Verrerie 2", "short_name": "Verrerie 2", "apex_s_m": 747.0, "s_frac": 0.128676},
-    {"number": 3, "name": "Virage de l'Hôtel 1", "short_name": "Hôtel 1", "apex_s_m": 1307.0, "s_frac": 0.225139},
-    {"number": 4, "name": "Virage de l'Hôtel 2", "short_name": "Hôtel 2", "apex_s_m": 1411.0, "s_frac": 0.243054},
-    {"number": 5, "name": "Virage du Camp", "short_name": "Camp", "apex_s_m": 1521.0, "s_frac": 0.262002},
-    {"number": 6, "name": "Virage de la Sainte-Baume", "short_name": "Ste-Baume", "apex_s_m": 1661.0, "s_frac": 0.286118},
-    {"number": 7, "name": "Ligne Droite du Mistral", "short_name": "Mistral", "apex_s_m": 1886.0, "s_frac": 0.324876},
-    {"number": 8, "name": "Chicane Nord 1", "short_name": "Chicane 1", "apex_s_m": 2962.0, "s_frac": 0.510223},
-    {"number": 9, "name": "Chicane Nord 2", "short_name": "Chicane 2", "apex_s_m": 3048.0, "s_frac": 0.525037},
-    {"number": 10, "name": "Courbe de Signes", "short_name": "Signes", "apex_s_m": 3948.0, "s_frac": 0.680068},
-    {"number": 11, "name": "Double Droite du Beausset 1", "short_name": "Beausset 1", "apex_s_m": 4390.0, "s_frac": 0.756206},
-    {"number": 12, "name": "Double Droite du Beausset 2", "short_name": "Beausset 2", "apex_s_m": 4482.0, "s_frac": 0.772053},
-    {"number": 13, "name": "Virage de Bendor", "short_name": "Bendor", "apex_s_m": 4831.0, "s_frac": 0.832171},
-    {"number": 14, "name": "Courbe du Garlaban", "short_name": "Garlaban", "apex_s_m": 4949.0, "s_frac": 0.852497},
-    {"number": 15, "name": "Virage du Lac", "short_name": "Lac", "apex_s_m": 5380.0, "s_frac": 0.926739},
-    {"number": 16, "name": "Virage du Pont", "short_name": "Pont", "apex_s_m": 5470.0, "s_frac": 0.942242}
+    {"number": 1, "name": "S de la Verrerie 1", "short_name": "Verrerie 1", "apex_s_m": 623.0, "s_frac": 0.107316, "label_offset_m": [-38.1, 43.7]},
+    {"number": 2, "name": "S de la Verrerie 2", "short_name": "Verrerie 2", "apex_s_m": 747.0, "s_frac": 0.128676, "label_offset_m": [-23.1, -69.4]},
+    {"number": 3, "name": "Virage de l'Hôtel 1", "short_name": "Hôtel 1", "apex_s_m": 1307.0, "s_frac": 0.225139, "label_offset_m": [76.3, -143.2]},
+    {"number": 4, "name": "Virage de l'Hôtel 2", "short_name": "Hôtel 2", "apex_s_m": 1411.0, "s_frac": 0.243054, "label_offset_m": [-69.7, -130.4]},
+    {"number": 5, "name": "Virage du Camp", "short_name": "Camp", "apex_s_m": 1521.0, "s_frac": 0.262002, "label_offset_m": [-24.8, 13.8]},
+    {"number": 6, "name": "Virage de la Sainte-Baume", "short_name": "Ste-Baume", "apex_s_m": 1661.0, "s_frac": 0.286118, "label_offset_m": [36.5, 86.3]},
+    {"number": 7, "name": "Ligne Droite du Mistral", "short_name": "Mistral", "apex_s_m": 1886.0, "s_frac": 0.324876, "label_offset_m": [194.8, 44.3]},
+    {"number": 8, "name": "Chicane Nord 1", "short_name": "Chicane 1", "apex_s_m": 2962.0, "s_frac": 0.510223, "label_offset_m": [-74.2, 96.3]},
+    {"number": 9, "name": "Chicane Nord 2", "short_name": "Chicane 2", "apex_s_m": 3048.0, "s_frac": 0.525037, "label_offset_m": [321.2, 30.0]},
+    {"number": 10, "name": "Courbe de Signes", "short_name": "Signes", "apex_s_m": 3948.0, "s_frac": 0.680068, "label_offset_m": [32.6, 112.4]},
+    {"number": 11, "name": "Double Droite du Beausset 1", "short_name": "Beausset 1", "apex_s_m": 4390.0, "s_frac": 0.756206, "label_offset_m": [74.3, -53.0]},
+    {"number": 12, "name": "Double Droite du Beausset 2", "short_name": "Beausset 2", "apex_s_m": 4482.0, "s_frac": 0.772053, "label_offset_m": [-106.0, 19.0]},
+    {"number": 13, "name": "Virage de Bendor", "short_name": "Bendor", "apex_s_m": 4831.0, "s_frac": 0.832171, "label_offset_m": [-146.4, -118.4]},
+    {"number": 14, "name": "Courbe du Garlaban", "short_name": "Garlaban", "apex_s_m": 4949.0, "s_frac": 0.852497, "label_offset_m": [-114.4, 117.6]},
+    {"number": 15, "name": "Virage du Lac", "short_name": "Lac", "apex_s_m": 5380.0, "s_frac": 0.926739, "label_offset_m": [-84.4, 93.8]},
+    {"number": 16, "name": "Virage du Pont", "short_name": "Pont", "apex_s_m": 5470.0, "s_frac": 0.942242, "label_offset_m": [-162.8, -9.8]}
   ]
 }

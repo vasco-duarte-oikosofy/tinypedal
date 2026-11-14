@@ -33,6 +33,15 @@ lap-telemetry `docs/specs/MAP_TURN_NAMES.md`):
 Nothing here imports Qt: text metrics are injected by the caller, so the whole
 rule can be tested without a display, and the same code works for any painter.
 
+Placed labels
+-------------
+A packaged file may also carry the driver's own layout, produced with
+lap-telemetry's turn-label editor: `label_offset_m` per turn (metres from the
+corner, sim Y up) plus the file-level `display_orientation` it was drawn for.
+Placed labels win over the rule below, but a placement that would overlap an
+already-placed label or leave the widget is handed back to the rule — readability
+beats both the rule and the preference.
+
 Anchoring
 ---------
 The corner positions come from lap-telemetry outlines, which are in LMU world
@@ -108,6 +117,7 @@ class TurnAnchor:
     normal_y: float
     tangent_x: float
     tangent_y: float
+    offset: tuple[float, float] | None = None   # placed centre, relative to the corner
 
 
 def font_size(map_size: float, config: dict | None = None) -> float:
@@ -209,9 +219,19 @@ def outward_normal(
     return normal_x, normal_y
 
 
+def path_length(coords) -> float:
+    """Length of the recorded map polyline, in its own units."""
+    return sum(calc.distance(a, b) for a, b in zip(coords, coords[1:]))
+
+
 def anchor_turns(turns, coords, angle: int, map_range, map_scale, map_offset,
-                 ) -> list[TurnAnchor]:
-    """Anchor every turn on the map, rotated and scaled like the map path."""
+                 units_per_metre: float = 1.0) -> list[TurnAnchor]:
+    """Anchor every turn on the map, rotated and scaled like the map path.
+
+    A turn may carry `label_offset_m` (a placed centre, in sim metres, Y up). It
+    is converted with the same rotate-then-scale as the map path so a placement
+    made in lap-telemetry's editor lands where it was drawn.
+    """
     centroid = map_centroid(coords)
     min_x, _, min_y, _ = map_range
     anchors = []
@@ -224,6 +244,12 @@ def anchor_turns(turns, coords, angle: int, map_range, map_scale, map_offset,
             _rotate((tan_x, tan_y), angle),
             _rotate((nor_x, nor_y), angle),
         )
+        offset = None
+        placed = turn.get("label_offset_m")
+        if isinstance(placed, (list, tuple)) and len(placed) == 2:
+            # Sim metres (Y up) -> recorded map units (Y down) -> rotated -> scaled.
+            orx, ory = _rotate((placed[0] * units_per_metre, -placed[1] * units_per_metre), angle)
+            offset = (orx * map_scale, ory * map_scale)
         anchors.append(TurnAnchor(
             number=int(turn["number"]),
             name=turn.get("name"),
@@ -234,6 +260,7 @@ def anchor_turns(turns, coords, angle: int, map_range, map_scale, map_offset,
             normal_y=rny,
             tangent_x=rtx,
             tangent_y=rty,
+            offset=offset,
         ))
     return anchors
 
@@ -263,7 +290,28 @@ def plan_turn_labels(anchors, map_size: float, measure, map_width: float | None 
     placed: list[TurnLabel] = []
     dropped: list[TurnLabel] = []
 
-    for index, anchor in enumerate(anchors):
+    # Placed labels claim their spot first, so the automatic ones avoid them.
+    # A placement wins unless it collides with an earlier placement or leaves the
+    # widget: the driver's intent beats the rule, but readability beats both.
+    free = [anchor for anchor in anchors if not anchor.offset]
+    for anchor in (anchor for anchor in anchors if anchor.offset):
+        width, height = measure(turn_texts(anchor.number, anchor.short_name or anchor.name,
+                                           map_size, cfg)[0], size)
+        x = anchor.x + anchor.offset[0] - width / 2
+        y = anchor.y + anchor.offset[1] - height / 2
+        label = TurnLabel(
+            text=turn_texts(anchor.number, anchor.short_name or anchor.name, map_size, cfg)[0],
+            number=anchor.number, x=x, y=y, width=width, height=height, side=1,
+            apex_x=anchor.x, apex_y=anchor.y,
+        )
+        inside = x >= 0 and y >= 0 and x + width <= map_width and y + height <= map_height
+        if inside and not any(_overlaps(label, other) for other in placed):
+            placed.append(label)
+        else:
+            # Hand this corner back to the rule rather than drawing a collision.
+            free.append(anchor)
+
+    for index, anchor in enumerate(free):
         # Odd turns sit outside the loop, even turns inside; the other side is
         # the first fallback before a label gives up its name.
         preferred = 1 if index % 2 == 0 else -1
@@ -329,6 +377,28 @@ def plan_turn_labels(anchors, map_size: float, measure, map_width: float | None 
 def default_data_path() -> str:
     """Folder of the turn-label files that ship with TinyPedal."""
     return os.path.join(os.path.dirname(__file__), "data", "turn_labels") + os.sep
+
+
+def load_track_orientation(track_name: str, folders=None) -> int | None:
+    """Map orientation a packaged label file suggests, or None.
+
+    Placement data is drawn for a particular rotation, so the file carries the
+    `display_orientation` it was made at. The widget uses this when the user has
+    not set an orientation of their own.
+    """
+    for folder in folders or (default_data_path(),):
+        try:
+            with open(f"{folder}{track_name}.turns.json", encoding="utf-8") as jsonfile:
+                data = json.load(jsonfile)
+        except FileNotFoundError:
+            continue
+        except (OSError, ValueError):
+            return None
+        orientation = data.get("display_orientation")
+        if isinstance(orientation, bool) or not isinstance(orientation, int):
+            return None
+        return orientation % 360
+    return None
 
 
 def load_turn_labels(track_name: str, folders=None) -> tuple[float, tuple] | None:

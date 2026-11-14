@@ -68,7 +68,8 @@ def main():
         check(support.assert_fonts_available(widget.turn_font), f'{size}px widget has real letter glyphs')
         for angle in (0, 90):
             widget.show_turn_name = True
-            placed, dropped, with_labels = support.render_track(widget, TRACK, angle=angle)
+            placed, dropped, with_labels = support.render_track(
+                widget, TRACK, angle=angle, ignore_placements=True)
             check(len(placed) == 11 and not dropped and
                   {label.text for label in placed} == {f'T{i}' for i in range(1, 12)},
                   f'{size}px/{angle}deg: all 11 official labels planned')
@@ -77,7 +78,8 @@ def main():
             check(not any(support.overlaps(a, b) for i, a in enumerate(placed) for b in placed[i + 1:]),
                   f'{size}px/{angle}deg: no label overlaps')
             widget.show_turn_name = False
-            without_labels = support.render_track(widget, TRACK, angle=angle)[2]
+            without_labels = support.render_track(
+                widget, TRACK, angle=angle, ignore_placements=True)[2]
             check(len(placed) == 11 and all(changed_pixels(with_labels.toImage(), without_labels.toImage(), p) > 0
                                            for p in placed),
                   f'{size}px/{angle}deg: every label actually changes painted pixels')

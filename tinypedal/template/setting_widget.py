@@ -2868,6 +2868,7 @@ WIDGET_DEFAULT = {
         "opacity": 0.9,
         "bar_padding": 0.5,
         "display_orientation": 0,
+        "use_track_orientation": True,
         "display_detail_level": 1,
         "area_size": 400,
         "area_margin": 40,

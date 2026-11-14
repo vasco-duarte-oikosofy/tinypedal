@@ -130,15 +130,24 @@ def ink_inside(pixmap, placed):
     return total
 
 
-def render_track(widget, track_name, save_folder=None, angle=0):
-    """Draw one track with the real widget; returns (placed, dropped, pixmap)."""
+def render_track(widget, track_name, save_folder=None, angle=0, ignore_placements=False):
+    """Draw one track with the real widget; returns (placed, dropped, pixmap).
+
+    `ignore_placements=True` strips the driver's shipped `label_offset_m` so the
+    test exercises the automatic placement rule alone. Per-track tests use that
+    to check the rule at any rotation; the shipped placements are checked at the
+    orientation they were drawn for by `tests/test_shipped_placements.py`.
+    """
     coords, _dists, _sectors = load_track_map_file(TRACKMAP, track_name)
     data = turn_labels.load_turn_labels(track_name, [TURNDATA])
     if coords is None or data is None:
         return None
     _lap_length, turns = data
+    if ignore_placements:
+        turns = tuple({key: value for key, value in turn.items() if key != "label_offset_m"}
+                      for turn in turns)
 
-    widget.turn_data = data
+    widget.turn_data = (_lap_length, turns)
     widget.wcfg["display_orientation"] = angle
     path = widget.create_map_path(coords)
     widget.draw_map_image(path, widget.circular_map)

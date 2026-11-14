@@ -1,19 +1,20 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "track_name": "Monza Curva Grande Circuit",
   "lap_length_m": 5733.74,
-  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases. label_offset_m is the driver's own placement in metres from the corner (sim Y up), drawn for display_orientation; the widget uses it before its own placement rule, and falls back to that rule if it would collide.",
+  "display_orientation": 0
 ,
   "turns": [
-    {"number": 1, "name": "Curva Grande", "short_name": null, "apex_s_m": 1400.0, "s_frac": 0.244169},
-    {"number": 2, "name": "Variante della Roggia 1", "short_name": "Roggia 1", "apex_s_m": 2109.0, "s_frac": 0.367823},
-    {"number": 3, "name": "Variante della Roggia 2", "short_name": "Roggia 2", "apex_s_m": 2153.0, "s_frac": 0.375497},
-    {"number": 4, "name": "Lesmo 1", "short_name": null, "apex_s_m": 2521.0, "s_frac": 0.439678},
-    {"number": 5, "name": "Lesmo 2", "short_name": null, "apex_s_m": 2833.0, "s_frac": 0.494093},
-    {"number": 6, "name": "Curva del Serraglio", "short_name": "Serraglio", "apex_s_m": 3240.0, "s_frac": 0.565076},
-    {"number": 7, "name": "Variante Ascari 1", "short_name": "Ascari 1", "apex_s_m": 3910.0, "s_frac": 0.681928},
-    {"number": 8, "name": "Variante Ascari 2", "short_name": "Ascari 2", "apex_s_m": 4006.0, "s_frac": 0.698671},
-    {"number": 9, "name": "Variante Ascari 3", "short_name": "Ascari 3", "apex_s_m": 4104.0, "s_frac": 0.715763},
-    {"number": 10, "name": "Curva Alboreto (Parabolica)", "short_name": "Parabolica", "apex_s_m": 5128.0, "s_frac": 0.894355}
+    {"number": 1, "name": "Curva Grande", "short_name": null, "apex_s_m": 1400.0, "s_frac": 0.244169, "label_offset_m": [-327.3, 69.7]},
+    {"number": 2, "name": "Variante della Roggia 1", "short_name": "Roggia 1", "apex_s_m": 2109.0, "s_frac": 0.367823, "label_offset_m": [-292.4, 39.3]},
+    {"number": 3, "name": "Variante della Roggia 2", "short_name": "Roggia 2", "apex_s_m": 2153.0, "s_frac": 0.375497, "label_offset_m": [33.8, -143.9]},
+    {"number": 4, "name": "Lesmo 1", "short_name": null, "apex_s_m": 2521.0, "s_frac": 0.439678, "label_offset_m": [241.7, -18.2]},
+    {"number": 5, "name": "Lesmo 2", "short_name": null, "apex_s_m": 2833.0, "s_frac": 0.494093, "label_offset_m": [237.8, -64.8]},
+    {"number": 6, "name": "Curva del Serraglio", "short_name": "Serraglio", "apex_s_m": 3240.0, "s_frac": 0.565076, "label_offset_m": [176.8, -98.2]},
+    {"number": 7, "name": "Variante Ascari 1", "short_name": "Ascari 1", "apex_s_m": 3910.0, "s_frac": 0.681928, "label_offset_m": [300.0, 40.9]},
+    {"number": 8, "name": "Variante Ascari 2", "short_name": "Ascari 2", "apex_s_m": 4006.0, "s_frac": 0.698671, "label_offset_m": [-242.1, 37.9]},
+    {"number": 9, "name": "Variante Ascari 3", "short_name": "Ascari 3", "apex_s_m": 4104.0, "s_frac": 0.715763, "label_offset_m": [262.6, -41.7]},
+    {"number": 10, "name": "Curva Alboreto (Parabolica)", "short_name": "Parabolica", "apex_s_m": 5128.0, "s_frac": 0.894355, "label_offset_m": [-443.6, -21.8]}
   ]
 }
