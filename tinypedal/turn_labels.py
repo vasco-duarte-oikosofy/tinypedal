@@ -295,20 +295,27 @@ def plan_turn_labels(anchors, map_size: float, measure, map_width: float | None 
     # widget: the driver's intent beats the rule, but readability beats both.
     free = [anchor for anchor in anchors if not anchor.offset]
     for anchor in (anchor for anchor in anchors if anchor.offset):
-        width, height = measure(turn_texts(anchor.number, anchor.short_name or anchor.name,
-                                           map_size, cfg)[0], size)
-        x = anchor.x + anchor.offset[0] - width / 2
-        y = anchor.y + anchor.offset[1] - height / 2
-        label = TurnLabel(
-            text=turn_texts(anchor.number, anchor.short_name or anchor.name, map_size, cfg)[0],
-            number=anchor.number, x=x, y=y, width=width, height=height, side=1,
-            apex_x=anchor.x, apex_y=anchor.y,
-        )
-        inside = x >= 0 and y >= 0 and x + width <= map_width and y + height <= map_height
-        if inside and not any(_overlaps(label, other) for other in placed):
-            placed.append(label)
+        text = turn_texts(anchor.number, anchor.short_name or anchor.name, map_size, cfg)[0]
+        width, height = measure(text, size)
+        # The placement is honoured as closely as the text allows: if the exact
+        # spot collides, slide the label further out along the side the driver
+        # chose before giving up on it. A few pixels is usually enough, and it
+        # keeps their intent (which side, roughly how far) intact.
+        chosen = None
+        for stretch in (1.0, 1.12, 1.25, 1.4, 1.6, 1.85, 2.1, 2.4):
+            x = anchor.x + anchor.offset[0] * stretch - width / 2
+            y = anchor.y + anchor.offset[1] * stretch - height / 2
+            if x < 0 or y < 0 or x + width > map_width or y + height > map_height:
+                continue
+            label = TurnLabel(text=text, number=anchor.number, x=x, y=y, width=width,
+                              height=height, side=1, apex_x=anchor.x, apex_y=anchor.y)
+            if not any(_overlaps(label, other) for other in placed):
+                chosen = label
+                break
+        if chosen is not None:
+            placed.append(chosen)
         else:
-            # Hand this corner back to the rule rather than drawing a collision.
+            # Nothing fits near the placed spot: let the rule have this corner.
             free.append(anchor)
 
     for index, anchor in enumerate(free):

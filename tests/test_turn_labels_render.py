@@ -91,11 +91,16 @@ def make_widget(area_size=AREA_SIZE):
     return widget
 
 
-def plan_for(widget, turns, coords):
+def plan_for(widget, turns, coords, lap_length=None):
     """The labels the widget plans for this map (same inputs, same code)."""
+    units_per_metre = (
+        turn_labels.path_length(coords) / lap_length
+        if lap_length else 1.0
+    )
     anchors = turn_labels.anchor_turns(
         turns, coords, widget.map_orient_deg,
-        widget.map_range, widget.map_scale, widget.map_offset)
+        widget.map_range, widget.map_scale, widget.map_offset,
+        units_per_metre=units_per_metre)
     metrics = QFontMetricsF(widget.turn_font)
     size = min(turn_labels.font_size(widget.temp_map_size),
                max(widget.wcfg["font_size"], 5))
@@ -130,7 +135,8 @@ def ink_inside(pixmap, placed):
     return total
 
 
-def render_track(widget, track_name, save_folder=None, angle=0, ignore_placements=False):
+def render_track(widget, track_name, save_folder=None, angle=0, ignore_placements=False,
+                 use_packaged_orientation=False):
     """Draw one track with the real widget; returns (placed, dropped, pixmap).
 
     `ignore_placements=True` strips the driver's shipped `label_offset_m` so the
@@ -148,12 +154,20 @@ def render_track(widget, track_name, save_folder=None, angle=0, ignore_placement
                       for turn in turns)
 
     widget.turn_data = (_lap_length, turns)
+    # The widget decides its rotation from the packaged file unless the user set
+    # one; a test that asks for a specific angle turns the package off so the
+    # angle it gets is the angle it asked for.
+    widget.packaged_orientation = (
+        turn_labels.load_track_orientation(track_name, [TURNDATA])
+        if use_packaged_orientation else None
+    )
+    widget.wcfg["use_track_orientation"] = use_packaged_orientation
     widget.wcfg["display_orientation"] = angle
     path = widget.create_map_path(coords)
     widget.draw_map_image(path, widget.circular_map)
     pixmap = widget.pixmap_map.copy()
 
-    placed, dropped = plan_for(widget, turns, coords)
+    placed, dropped = plan_for(widget, turns, coords, _lap_length)
     if save_folder:
         pixmap.save(os.path.join(save_folder, f"track-{safe_name(track_name)}.png"))
     return placed, dropped, pixmap
