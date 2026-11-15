@@ -2,22 +2,23 @@
   "schema_version": 2,
   "track_name": "Circuit de Barcelona",
   "lap_length_m": 4768.325,
-  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases. label_offset_m is the driver's own placement in metres from the corner (sim Y up), drawn for display_orientation; the widget uses it before its own placement rule, and falls back to that rule if it would collide.",
+  "display_orientation": 0
 ,
   "turns": [
-    {"number": 1, "name": "Turn 1 — Elf", "short_name": null, "apex_s_m": 853.0, "s_frac": 0.178889},
-    {"number": 2, "name": null, "short_name": null, "apex_s_m": 946.0, "s_frac": 0.198393},
-    {"number": 3, "name": "Turn 3 — Renault", "short_name": "Renault", "apex_s_m": 1142.0, "s_frac": 0.239497},
-    {"number": 4, "name": "Turn 4 — Repsol", "short_name": "Repsol", "apex_s_m": 1753.0, "s_frac": 0.367634},
-    {"number": 5, "name": "Turn 5 — Seat", "short_name": null, "apex_s_m": 2144.0, "s_frac": 0.449634},
-    {"number": 6, "name": null, "short_name": null, "apex_s_m": 2370.0, "s_frac": 0.49703},
-    {"number": 7, "name": "Turn 7 — Würth", "short_name": "Würth", "apex_s_m": 2558.0, "s_frac": 0.536457},
-    {"number": 8, "name": null, "short_name": null, "apex_s_m": 2660.0, "s_frac": 0.557848},
-    {"number": 9, "name": "Turn 9 — Campsa", "short_name": "Campsa", "apex_s_m": 2903.0, "s_frac": 0.608809},
-    {"number": 10, "name": "Turn 10 — La Caixa", "short_name": "La Caixa", "apex_s_m": 3526.0, "s_frac": 0.739463},
-    {"number": 11, "name": null, "short_name": null, "apex_s_m": 3610.0, "s_frac": 0.757079},
-    {"number": 12, "name": null, "short_name": null, "apex_s_m": 3771.0, "s_frac": 0.790844},
-    {"number": 13, "name": null, "short_name": null, "apex_s_m": 4057.0, "s_frac": 0.850823},
-    {"number": 14, "name": null, "short_name": null, "apex_s_m": 4323.0, "s_frac": 0.906608}
+    {"number": 1, "name": "Turn 1 — Elf", "short_name": null, "apex_s_m": 853.0, "s_frac": 0.178889, "label_offset_m": [129.5, 16.1]},
+    {"number": 2, "name": null, "short_name": null, "apex_s_m": 946.0, "s_frac": 0.198393, "label_offset_m": [-24.1, -42.2]},
+    {"number": 3, "name": "Turn 3 — Renault", "short_name": "Renault", "apex_s_m": 1142.0, "s_frac": 0.239497, "label_offset_m": [-91.2, -30.4]},
+    {"number": 4, "name": "Turn 4 — Repsol", "short_name": "Repsol", "apex_s_m": 1753.0, "s_frac": 0.367634, "label_offset_m": [-120.0, 0.1]},
+    {"number": 5, "name": "Turn 5 — Seat", "short_name": null, "apex_s_m": 2144.0, "s_frac": 0.449634, "label_offset_m": [-176.1, -13.8]},
+    {"number": 6, "name": null, "short_name": null, "apex_s_m": 2370.0, "s_frac": 0.49703, "label_offset_m": [21.8, 33.5]},
+    {"number": 7, "name": "Turn 7 — Würth", "short_name": "Würth", "apex_s_m": 2558.0, "s_frac": 0.536457, "label_offset_m": [-98.3, 8.5]},
+    {"number": 8, "name": null, "short_name": null, "apex_s_m": 2660.0, "s_frac": 0.557848, "label_offset_m": [76.6, 32.0]},
+    {"number": 9, "name": "Turn 9 — Campsa", "short_name": "Campsa", "apex_s_m": 2903.0, "s_frac": 0.608809, "label_offset_m": [-108.8, 103.3]},
+    {"number": 10, "name": "Turn 10 — La Caixa", "short_name": "La Caixa", "apex_s_m": 3526.0, "s_frac": 0.739463, "label_offset_m": [-59.2, -30.3]},
+    {"number": 11, "name": null, "short_name": null, "apex_s_m": 3610.0, "s_frac": 0.757079, "label_offset_m": [1.9, 48.8]},
+    {"number": 12, "name": null, "short_name": null, "apex_s_m": 3771.0, "s_frac": 0.790844, "label_offset_m": [-161.9, -18.1]},
+    {"number": 13, "name": null, "short_name": null, "apex_s_m": 4057.0, "s_frac": 0.850823, "label_offset_m": [-144.2, -25.3]},
+    {"number": 14, "name": null, "short_name": null, "apex_s_m": 4323.0, "s_frac": 0.906608, "label_offset_m": [117.4, -25.7]}
   ]
 }
