@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "track_name": "Circuit of the Americas",
+  "lap_length_m": 5458.773,
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+,
+  "turns": [
+    {"number": 1, "name": "Turn 1 — Big Red", "short_name": "Big Red", "apex_s_m": 662.0, "s_frac": 0.121273},
+    {"number": 4, "name": "Turn 4 — Esses", "short_name": "Esses", "apex_s_m": 1209.0, "s_frac": 0.221478},
+    {"number": 5, "name": "Turn 5 — Esses", "short_name": "Esses", "apex_s_m": 1291.0, "s_frac": 0.2365},
+    {"number": 6, "name": "Turn 6 — Esses", "short_name": "Esses", "apex_s_m": 1512.0, "s_frac": 0.276985},
+    {"number": 7, "name": null, "short_name": null, "apex_s_m": 1711.0, "s_frac": 0.31344},
+    {"number": 8, "name": null, "short_name": null, "apex_s_m": 1907.0, "s_frac": 0.349346},
+    {"number": 9, "name": null, "short_name": null, "apex_s_m": 1968.0, "s_frac": 0.360521},
+    {"number": 11, "name": "Turn 11 — Bobby Pin", "short_name": "Bobby Pin", "apex_s_m": 2589.0, "s_frac": 0.474282},
+    {"number": 12, "name": null, "short_name": null, "apex_s_m": 3793.0, "s_frac": 0.694845},
+    {"number": 13, "name": null, "short_name": null, "apex_s_m": 4006.0, "s_frac": 0.733865},
+    {"number": 15, "name": null, "short_name": null, "apex_s_m": 4292.0, "s_frac": 0.786257},
+    {"number": 16, "name": "Turn 16-18 — Carousel", "short_name": "Carousel", "apex_s_m": 4642.0, "s_frac": 0.850374},
+    {"number": 19, "name": null, "short_name": null, "apex_s_m": 5033.0, "s_frac": 0.922002},
+    {"number": 20, "name": "Turn 20 — The Andretti", "short_name": "Andretti", "apex_s_m": 5356.0, "s_frac": 0.981173}
+  ]
+}
