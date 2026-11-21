@@ -2,22 +2,23 @@
   "schema_version": 2,
   "track_name": "Circuit of the Americas",
   "lap_length_m": 5458.773,
-  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases. label_offset_m is the driver's own placement in metres from the corner (sim Y up), drawn for display_orientation; the widget uses it before its own placement rule, and falls back to that rule if it would collide.",
+  "display_orientation": 0
 ,
   "turns": [
-    {"number": 1, "name": "Turn 1 — Big Red", "short_name": "Big Red", "apex_s_m": 654.0, "s_frac": 0.119807},
-    {"number": 4, "name": "Turn 4 — Esses", "short_name": "Esses", "apex_s_m": 1209.0, "s_frac": 0.221478},
-    {"number": 5, "name": "Turn 5 — Esses", "short_name": "Esses", "apex_s_m": 1353.0, "s_frac": 0.247858},
-    {"number": 6, "name": "Turn 6 — Esses", "short_name": "Esses", "apex_s_m": 1512.0, "s_frac": 0.276985},
-    {"number": 7, "name": null, "short_name": null, "apex_s_m": 1716.0, "s_frac": 0.314356},
-    {"number": 8, "name": null, "short_name": null, "apex_s_m": 1888.0, "s_frac": 0.345865},
-    {"number": 9, "name": null, "short_name": null, "apex_s_m": 1968.0, "s_frac": 0.360521},
-    {"number": 11, "name": "Turn 11 — Bobby Pin", "short_name": "Bobby Pin", "apex_s_m": 2598.0, "s_frac": 0.475931},
-    {"number": 12, "name": null, "short_name": null, "apex_s_m": 3794.0, "s_frac": 0.695028},
-    {"number": 13, "name": null, "short_name": null, "apex_s_m": 4004.0, "s_frac": 0.733498},
-    {"number": 15, "name": null, "short_name": null, "apex_s_m": 4286.0, "s_frac": 0.785158},
-    {"number": 16, "name": "Turn 16-18 — Carousel", "short_name": "Carousel", "apex_s_m": 4629.0, "s_frac": 0.847993},
-    {"number": 19, "name": null, "short_name": null, "apex_s_m": 5045.0, "s_frac": 0.9242},
-    {"number": 20, "name": "Turn 20 — The Andretti", "short_name": "Andretti", "apex_s_m": 5327.0, "s_frac": 0.97586}
+    {"number": 1, "name": "Turn 1 — Big Red", "short_name": "Big Red", "apex_s_m": 654.0, "s_frac": 0.119807, "label_offset_m": [-21.7, -63.4]},
+    {"number": 4, "name": "Turn 4 — Esses", "short_name": "Esses", "apex_s_m": 1209.0, "s_frac": 0.221478, "label_offset_m": [83.2, -17.8]},
+    {"number": 5, "name": "Turn 5 — Esses", "short_name": "Esses", "apex_s_m": 1353.0, "s_frac": 0.247858, "label_offset_m": [87.4, -4.6]},
+    {"number": 6, "name": "Turn 6 — Esses", "short_name": "Esses", "apex_s_m": 1512.0, "s_frac": 0.276985, "label_offset_m": [-35.3, 34.3]},
+    {"number": 7, "name": null, "short_name": null, "apex_s_m": 1716.0, "s_frac": 0.314356, "label_offset_m": [6.1, 62.5]},
+    {"number": 8, "name": null, "short_name": null, "apex_s_m": 1888.0, "s_frac": 0.345865, "label_offset_m": [1.7, 52.7]},
+    {"number": 9, "name": null, "short_name": null, "apex_s_m": 1968.0, "s_frac": 0.360521, "label_offset_m": [112.6, -46.5]},
+    {"number": 11, "name": "Turn 11 — Bobby Pin", "short_name": "Bobby Pin", "apex_s_m": 2598.0, "s_frac": 0.475931, "label_offset_m": [-24.8, 63.7]},
+    {"number": 12, "name": null, "short_name": null, "apex_s_m": 3794.0, "s_frac": 0.695028, "label_offset_m": [-74.3, 44.2]},
+    {"number": 13, "name": null, "short_name": null, "apex_s_m": 4004.0, "s_frac": 0.733498, "label_offset_m": [93.2, -3.2]},
+    {"number": 15, "name": null, "short_name": null, "apex_s_m": 4286.0, "s_frac": 0.785158, "label_offset_m": [-93.2, 41.2]},
+    {"number": 16, "name": "Turn 16-18 — Carousel", "short_name": "Carousel", "apex_s_m": 4629.0, "s_frac": 0.847993, "label_offset_m": [-85.4, -50.6]},
+    {"number": 19, "name": null, "short_name": null, "apex_s_m": 5045.0, "s_frac": 0.9242, "label_offset_m": [0.4, 61.6]},
+    {"number": 20, "name": "Turn 20 — The Andretti", "short_name": "Andretti", "apex_s_m": 5327.0, "s_frac": 0.97586, "label_offset_m": [114.7, -4.2]}
   ]
 }
