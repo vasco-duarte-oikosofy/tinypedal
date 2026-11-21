@@ -2,19 +2,20 @@
   "schema_version": 2,
   "track_name": "Fuji Speedway",
   "lap_length_m": 4538.9,
-  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases. label_offset_m is the driver's own placement in metres from the corner (sim Y up), drawn for display_orientation; the widget uses it before its own placement rule, and falls back to that rule if it would collide.",
+  "display_orientation": 0
 ,
   "turns": [
-    {"number": 1, "name": "First Corner", "short_name": "First", "apex_s_m": 771.0, "s_frac": 0.169865},
-    {"number": 2, "name": "Coca-Cola", "short_name": null, "apex_s_m": 1326.0, "s_frac": 0.292141},
-    {"number": 3, "name": "100R", "short_name": "One Hundred R", "apex_s_m": 1743.0, "s_frac": 0.384014},
-    {"number": 4, "name": "Hairpin", "short_name": null, "apex_s_m": 2005.0, "s_frac": 0.441737},
-    {"number": 5, "name": "Dunlop Bypass", "short_name": "Dunlop", "apex_s_m": 2842.0, "s_frac": 0.626143},
-    {"number": 6, "name": null, "short_name": "Eleven", "apex_s_m": 2918.0, "s_frac": 0.642887},
-    {"number": 7, "name": null, "short_name": "Twelve", "apex_s_m": 3116.0, "s_frac": 0.68651},
-    {"number": 8, "name": "13th Corner", "short_name": "Thirteenth", "apex_s_m": 3151.0, "s_frac": 0.694221},
-    {"number": 9, "name": "Netz", "short_name": null, "apex_s_m": 3310.0, "s_frac": 0.729252},
-    {"number": 10, "name": "Netz Hairpin", "short_name": "Netz Hairpin", "apex_s_m": 3385.0, "s_frac": 0.745775},
-    {"number": 11, "name": "Panasonic", "short_name": null, "apex_s_m": 3663.0, "s_frac": 0.807024}
+    {"number": 1, "name": "First Corner", "short_name": "First", "apex_s_m": 771.0, "s_frac": 0.169865, "label_offset_m": [-17.0, 39.8]},
+    {"number": 2, "name": "Coca-Cola", "short_name": null, "apex_s_m": 1326.0, "s_frac": 0.292141, "label_offset_m": [190.9, 15.5]},
+    {"number": 3, "name": "100R", "short_name": "One Hundred R", "apex_s_m": 1743.0, "s_frac": 0.384014, "label_offset_m": [181.6, -42.8]},
+    {"number": 4, "name": "Hairpin", "short_name": null, "apex_s_m": 2005.0, "s_frac": 0.441737, "label_offset_m": [-100.1, 29.6]},
+    {"number": 5, "name": "Dunlop Bypass", "short_name": "Dunlop", "apex_s_m": 2842.0, "s_frac": 0.626143, "label_offset_m": [194.1, 4.9]},
+    {"number": 6, "name": null, "short_name": "Eleven", "apex_s_m": 2918.0, "s_frac": 0.642887, "label_offset_m": [-121.4, -65.2]},
+    {"number": 7, "name": null, "short_name": "Twelve", "apex_s_m": 3116.0, "s_frac": 0.68651, "label_offset_m": [-119.5, -30.4]},
+    {"number": 8, "name": "13th Corner", "short_name": "Thirteenth", "apex_s_m": 3151.0, "s_frac": 0.694221, "label_offset_m": [-173.7, 18.3]},
+    {"number": 9, "name": "Netz", "short_name": null, "apex_s_m": 3310.0, "s_frac": 0.729252, "label_offset_m": [124.6, 0.3]},
+    {"number": 10, "name": "Netz Hairpin", "short_name": "Netz Hairpin", "apex_s_m": 3385.0, "s_frac": 0.745775, "label_offset_m": [141.2, 49.1]},
+    {"number": 11, "name": "Panasonic", "short_name": null, "apex_s_m": 3663.0, "s_frac": 0.807024, "label_offset_m": [-99.3, 169.7]}
   ]
 }

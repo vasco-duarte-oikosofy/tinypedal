@@ -34,9 +34,11 @@ TRACKS = (
     "Monza Curva Grande Circuit",
     "Circuit de Barcelona",
     "Autódromo José Carlos Pace",
+    "Fuji Speedway",
 )
 # Tracks whose driver placement is reviewed turn by turn, with saved images.
-REVIEWED = {"Circuit de Barcelona": 14, "Autódromo José Carlos Pace": 15}
+REVIEWED = {"Circuit de Barcelona": 14, "Autódromo José Carlos Pace": 15,
+            "Fuji Speedway": 11}
 SIZES = (400, 600)
 FAILURES = []
 
@@ -109,7 +111,8 @@ def main():
                 folder = os.environ.get("PLACEMENT_ARTIFACTS")
                 if folder:
                     os.makedirs(folder, exist_ok=True)
-                    slug = "interlagos" if "Pace" in track else "barcelona"
+                    slug = {"Fuji Speedway": "fuji"}.get(
+                        track, "interlagos" if "Pace" in track else "barcelona")
                     check(f"{size}px: {track} review image saved", _pixmap.save(
                         os.path.join(folder, f"{slug}-{size}px.png")))
             check(f"{size}px: every corner got a label", len(placed) + len(dropped) == len(turns),
