@@ -2,23 +2,24 @@
   "schema_version": 2,
   "track_name": "Autódromo José Carlos Pace",
   "lap_length_m": 4304.618,
-  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases."
+  "note": "s_frac = apex distance / lap length, 0 at the start/finish line. The TinyPedal widget interpolates it into its own recorded map so no coordinate system is shared between the two code bases. label_offset_m is the driver's own placement in metres from the corner (sim Y up), drawn for display_orientation; the widget uses it before its own placement rule, and falls back to that rule if it would collide.",
+  "display_orientation": 0
 ,
   "turns": [
-    {"number": 1, "name": "Senna S 1", "short_name": "Senna 1", "apex_s_m": 384.0, "s_frac": 0.089207},
-    {"number": 2, "name": "Senna S 2", "short_name": "Senna 2", "apex_s_m": 453.0, "s_frac": 0.105236},
-    {"number": 3, "name": "Curva do Sol", "short_name": "Sol", "apex_s_m": 698.0, "s_frac": 0.162151},
-    {"number": 4, "name": "Descida do Lago 1", "short_name": "Lago 1", "apex_s_m": 1424.0, "s_frac": 0.330807},
-    {"number": 5, "name": "Descida do Lago 2", "short_name": "Lago 2", "apex_s_m": 1605.0, "s_frac": 0.372855},
-    {"number": 6, "name": "Ferradura 1", "short_name": null, "apex_s_m": 2089.0, "s_frac": 0.485293},
-    {"number": 7, "name": "Ferradura 2", "short_name": null, "apex_s_m": 2152.0, "s_frac": 0.499928},
-    {"number": 8, "name": "Laranjinha", "short_name": null, "apex_s_m": 2361.0, "s_frac": 0.548481},
-    {"number": 9, "name": "Pinheirinho", "short_name": null, "apex_s_m": 2477.0, "s_frac": 0.575428},
-    {"number": 10, "name": "Bico de Pato", "short_name": "Bico", "apex_s_m": 2766.0, "s_frac": 0.642566},
-    {"number": 11, "name": "Mergulho", "short_name": null, "apex_s_m": 2949.0, "s_frac": 0.685078},
-    {"number": 12, "name": "Junção", "short_name": null, "apex_s_m": 3251.0, "s_frac": 0.755235},
-    {"number": 13, "name": "Café", "short_name": null, "apex_s_m": 3391.0, "s_frac": 0.787759},
-    {"number": 14, "name": "Subida das Boxes", "short_name": "Boxes", "apex_s_m": 3680.0, "s_frac": 0.854896},
-    {"number": 15, "name": "Arquibancadas", "short_name": "Arquib.", "apex_s_m": 4020.0, "s_frac": 0.933881}
+    {"number": 1, "name": "Senna S 1", "short_name": "Senna 1", "apex_s_m": 384.0, "s_frac": 0.089207, "label_offset_m": [-98.9, 34.7]},
+    {"number": 2, "name": "Senna S 2", "short_name": "Senna 2", "apex_s_m": 453.0, "s_frac": 0.105236, "label_offset_m": [44.4, -54.4]},
+    {"number": 3, "name": "Curva do Sol", "short_name": "Sol", "apex_s_m": 698.0, "s_frac": 0.162151, "label_offset_m": [155.5, -15.5]},
+    {"number": 4, "name": "Descida do Lago 1", "short_name": "Lago 1", "apex_s_m": 1424.0, "s_frac": 0.330807, "label_offset_m": [131.5, 19.7]},
+    {"number": 5, "name": "Descida do Lago 2", "short_name": "Lago 2", "apex_s_m": 1605.0, "s_frac": 0.372855, "label_offset_m": [38.2, 38.9]},
+    {"number": 6, "name": "Ferradura 1", "short_name": null, "apex_s_m": 2089.0, "s_frac": 0.485293, "label_offset_m": [174.4, 20.3]},
+    {"number": 7, "name": "Ferradura 2", "short_name": null, "apex_s_m": 2152.0, "s_frac": 0.499928, "label_offset_m": [-18.5, -43.2]},
+    {"number": 8, "name": "Laranjinha", "short_name": null, "apex_s_m": 2361.0, "s_frac": 0.548481, "label_offset_m": [-106.4, 4.9]},
+    {"number": 9, "name": "Pinheirinho", "short_name": null, "apex_s_m": 2477.0, "s_frac": 0.575428, "label_offset_m": [102.3, 35.4]},
+    {"number": 10, "name": "Bico de Pato", "short_name": "Bico", "apex_s_m": 2766.0, "s_frac": 0.642566, "label_offset_m": [48.7, 29.6]},
+    {"number": 11, "name": "Mergulho", "short_name": null, "apex_s_m": 2949.0, "s_frac": 0.685078, "label_offset_m": [33.4, -21.9]},
+    {"number": 12, "name": "Junção", "short_name": null, "apex_s_m": 3251.0, "s_frac": 0.755235, "label_offset_m": [119.1, 25.1]},
+    {"number": 13, "name": "Café", "short_name": null, "apex_s_m": 3391.0, "s_frac": 0.787759, "label_offset_m": [-3.2, 25.6]},
+    {"number": 14, "name": "Subida das Boxes", "short_name": "Boxes", "apex_s_m": 3680.0, "s_frac": 0.854896, "label_offset_m": [-95.9, 10.4]},
+    {"number": 15, "name": "Arquibancadas", "short_name": "Arquib.", "apex_s_m": 4020.0, "s_frac": 0.933881, "label_offset_m": [-138.5, -46.1]}
   ]
 }

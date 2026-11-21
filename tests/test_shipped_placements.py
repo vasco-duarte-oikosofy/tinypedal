@@ -33,7 +33,10 @@ TRACKS = (
     "Silverstone National Circuit",
     "Monza Curva Grande Circuit",
     "Circuit de Barcelona",
+    "Autódromo José Carlos Pace",
 )
+# Tracks whose driver placement is reviewed turn by turn, with saved images.
+REVIEWED = {"Circuit de Barcelona": 14, "Autódromo José Carlos Pace": 15}
 SIZES = (400, 600)
 FAILURES = []
 
@@ -94,19 +97,21 @@ def main():
             placed = placed or []
             check(f"{size}px: actual widget size", widget.area_size == size
                   and _pixmap.width() == size and _pixmap.height() == size)
-            if track == "Circuit de Barcelona":
-                check(f"{size}px: all 14 Barcelona labels rendered, none dropped",
-                      len(placed) == 14 and not dropped)
-                check(f"{size}px: Barcelona rotation is the driver's zero degrees",
+            if track in REVIEWED:
+                count = REVIEWED[track]
+                check(f"{size}px: all {count} {track} labels rendered, none dropped",
+                      len(placed) == count and not dropped)
+                check(f"{size}px: {track} rotation is the driver's zero degrees",
                       widget.map_orient_deg == 0)
-                check(f"{size}px: Barcelona labels have painted ink",
+                check(f"{size}px: {track} labels have painted ink",
                       support.ink_inside(_pixmap, placed) > 0)
                 import os
-                folder = os.environ.get("BARCELONA_PLACEMENT_ARTIFACTS")
+                folder = os.environ.get("PLACEMENT_ARTIFACTS")
                 if folder:
                     os.makedirs(folder, exist_ok=True)
-                    check(f"{size}px: Barcelona review image saved", _pixmap.save(
-                        os.path.join(folder, f"barcelona-{size}px.png")))
+                    slug = "interlagos" if "Pace" in track else "barcelona"
+                    check(f"{size}px: {track} review image saved", _pixmap.save(
+                        os.path.join(folder, f"{slug}-{size}px.png")))
             check(f"{size}px: every corner got a label", len(placed) + len(dropped) == len(turns),
                   f"{len(placed)} placed, {len(dropped)} dropped")
             check(f"{size}px: no overlapping labels",
